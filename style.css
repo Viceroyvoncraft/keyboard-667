@@ -33,8 +33,7 @@ h1 {
 
 #gameList {
     display: grid;
-    /* Un diseño de rejilla que se adapta al espacio disponible */
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
     gap: 1.5em;
 }
 
@@ -44,11 +43,8 @@ h1 {
     border-radius: 8px;
     padding: 1.5em;
     box-shadow: 0 4px 8px rgba(0,0,0,0.4);
-    transition: transform 0.2s ease-in-out;
-}
-
-.game-card:hover {
-    transform: translateY(-5px);
+    display: flex;
+    flex-direction: column;
 }
 
 .game-card h2 {
@@ -59,4 +55,48 @@ h1 {
 .game-card p {
     margin: 0.5em 0;
     line-height: 1.6;
+}
+
+/* --- NUEVOS ESTILOS PARA EL TECLADO --- */
+
+.keyboard-display {
+    margin-top: 1.5em;
+    padding: 1em;
+    background-color: #1e1e1e;
+    border-radius: 5px;
+    border: 1px solid #555;
+}
+
+.keyboard-row {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 5px;
+}
+
+.key {
+    display: inline-block;
+    padding: 10px 15px;
+    margin: 2px;
+    border: 1px solid #666;
+    background-color: #444;
+    border-radius: 4px;
+    min-width: 20px;
+    text-align: center;
+    font-weight: bold;
+    color: #ccc;
+}
+
+.key-wide {
+    padding: 10px 30px;
+}
+
+.key-space {
+    width: 250px;
+}
+
+/* El estado sagrado de una tecla en uso */
+.key-bound {
+    background-color: #ffa500;
+    color: #1a1a1a;
+    border-color: #ffc864;
 }
