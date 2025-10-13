@@ -5,46 +5,10 @@ document.addEventListener('DOMContentLoaded', () => {
             "id": 1,
             "title": "Half-Life 2",
             "developer": "Valve Corporation",
-            "publisher": "Valve Corporation",
-            "release_date": "2004-11-16",
-            "genre": "First-person shooter",
-            "notes": "Un juego fundamental que estableció muchos de los estándares de control modernos para los FPS en PC.",
             "controls": {
-                "Move Forward": "W",
-                "Move Back": "S",
-                "Strafe Left": "A",
- "Strafe Right": "D",
- "Jump": "Space",
-                "Crouch": "Ctrl",
- "Primary Fire": "Mouse 1",
- "Secondary Fire": "Mouse 2",
- "Use / Interact": "E",
- "Reload": "R",
- "Flashlight": "F",
-                "Sprint": "Shift",
-                "Gravity Gun": "G"
-            }
-        },
-        {
-            "id": 2,
-            "title": "Cyberpunk 2077",
-            "developer": "CD Projekt Red",
- "release_date": "2020-12-10",
-            "genre": "Action role-playing",
-            "notes": "Controles de movimiento y combate rápidos.",
-            "controls": {
-                "Move Forward": "W",
- "Move Back": "S",
- "Strafe Left": "A",
- "Strafe Right": "D",
- "Jump": "Space",
- "Sprint": "Shift",
- "Crouch": "C",
- "Interact": "F",
- "Scanner": "Tab",
-                "Aim": "Mouse 2",
-                "Attack": "Mouse 1",
-                "Reload": "R"
+                "Move Forward": "W", "Move Back": "S", "Strafe Left": "A", "Strafe Right": "D",
+                "Jump": "Space", "Crouch": "Ctrl", "Primary Fire": "Mouse 1", "Secondary Fire": "Mouse 2",
+                "Use / Interact": "E", "Reload": "R", "Flashlight": "F", "Sprint": "Shift", "Gravity Gun": "G"
             }
         }
     ];
@@ -53,81 +17,81 @@ document.addEventListener('DOMContentLoaded', () => {
     const searchInput = document.getElementById('searchInput');
 
     /**
-     * Genera el HTML para una representación simplificada del teclado.
-     * @returns {string} - Una cadena de texto con el HTML del teclado.
+     * Genera el HTML para el diagrama del ratón.
      */
-    function getKeyboardHtml() {
+    function getMouseHtml() {
         return `
-            <div class="keyboard-display">
-                <div class="keyboard-row">
-                    <div class="key" data-key="Q">Q</div>
-                    <div class="key" data-key="W">W</div>
-                    <div class="key" data-key="E">E</div>
-                    <div class="key" data-key="R">R</div>
-                    <div class="key" data-key="T">T</div>
-                    <div class="key" data-key="Y">Y</div>
+            <div class="mouse-display">
+                <div class="mouse-body">
+                    <div class="mouse-button left" data-key="Mouse 1"></div>
+                    <div class="mouse-wheel" data-key="Mouse 3"></div>
+                    <div class="mouse-button right" data-key="Mouse 2"></div>
                 </div>
-                <div class="keyboard-row">
-                    <div class="key" data-key="A">A</div>
-                    <div class="key" data-key="S">S</div>
-                    <div class="key" data-key="D">D</div>
-                    <div class="key" data-key="F">F</div>
-                    <div class="key" data-key="G">G</div>
-                </div>
-                <div class="keyboard-row">
-                    <div class="key key-wide" data-key="Shift">Shift</div>
-                    <div class="key" data-key="Z">Z</div>
-                    <div class="key" data-key="X">X</div>
-                    <div class="key" data-key="C">C</div>
-                    <div class="key" data-key="V">V</div>
-                </div>
-                <div class="keyboard-row">
-                    <div class="key" data-key="Ctrl">Ctrl</div>
-                    <div class="key key-space" data-key="Space"></div>
-                    <div class="key" data-key="Tab">Tab</div>
-                </div>
+                <p>Ratón</p>
             </div>
         `;
     }
 
+    /**
+     * Genera el HTML para una representación completa del teclado.
+     */
+    function getKeyboardHtml() {
+        // Matriz que define la disposición y clases de cada tecla
+        const layout = [
+            ["`", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "=", {key: "Backspace", class: "key-2x"}],
+            [{key: "Tab", class: "key-1-5x"}, "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P", "[", "]", {key: "\\", class: "key-1-5x"}],
+            [{key: "Caps Lock", class: "key-2x"}, "A", "S", "D", "F", "G", "H", "J", "K", "L", ";", "'", {key: "Enter", class: "key-2x"}],
+            [{key: "Shift", class: "key-2-5x"}, "Z", "X", "C", "V", "B", "N", "M", ",", ".", "/", {key: "Shift", class: "key-2-5x", id: "RShift"}],
+            [{key: "Ctrl", class: "key-1-5x"}, {key: "Alt", class: "key-1-5x"}, {key: "Space", class: "key-space"}, {key: "Alt", class: "key-1-5x"}, {key: "Ctrl", class: "key-1-5x"}]
+        ];
+
+        let html = '<div class="keyboard-display">';
+        layout.forEach(row => {
+            html += '<div class="keyboard-row">';
+            row.forEach(item => {
+                if (typeof item === 'object') {
+                    // ID único para la segunda tecla Shift para diferenciarla, aunque ambas respondan a "Shift"
+                    const dataKey = item.id ? item.key : item.key;
+                    html += `<div class="key ${item.class}" data-key="${dataKey}">${item.key}</div>`;
+                } else {
+                    html += `<div class="key" data-key="${item}">${item}</div>`;
+                }
+            });
+            html += '</div>';
+        });
+        html += '</div>';
+        return html;
+    }
+    
     function displayGames(gamesToDisplay) {
         gameListContainer.innerHTML = '';
-        if (gamesToDisplay.length === 0) {
-            gameListContainer.innerHTML = '<p>No se encontraron juegos.</p>';
-            return;
-        }
+        if (gamesToDisplay.length === 0) { return; }
 
         gamesToDisplay.forEach(game => {
             const gameCard = document.createElement('div');
             gameCard.classList.add('game-card');
             
-            let controlsText = '';
-            for (const action in game.controls) {
-                if (game.controls[action].includes("Mouse")) {
-                    controlsText += `<p><strong>${action}:</strong> ${game.controls[action]}</p>`;
-                }
-            }
-
             gameCard.innerHTML = `
                 <h2>${game.title}</h2>
                 <p><strong>Desarrollador:</strong> ${game.developer}</p>
-                <p><strong>Notas:</strong> ${game.notes}</p>
-                <div class="mouse-controls">
-                    <h3>Controles del Ratón:</h3>
-                    ${controlsText.length > 0 ? controlsText : "<p>No especificados.</p>"}
+                <div class="controls-container">
+                    ${getMouseHtml()}
+                    ${getKeyboardHtml()}
                 </div>
-                <h3>Disposición de Teclado:</h3>
-                ${getKeyboardHtml()}
             `;
-
-            // Ahora, ilumina las teclas correspondientes DENTRO de la tarjeta que acabamos de crear.
-            const boundKeys = Object.values(game.controls);
-            boundKeys.forEach(keyName => {
-                // Buscamos la tecla solo dentro del contexto de la tarjeta actual.
-                const keyElement = gameCard.querySelector(`.key[data-key="${keyName}"]`);
-                if (keyElement) {
-                    keyElement.classList.add('key-bound');
-                }
+            
+            // Lógica unificada para iluminar controles (ratón y teclado)
+            const boundControls = Object.values(game.controls);
+            boundControls.forEach(controlName => {
+                // querySelectorAll para iluminar ambas teclas Shift/Ctrl si están asignadas
+                const controlElements = gameCard.querySelectorAll(`[data-key="${controlName}"]`);
+                controlElements.forEach(el => {
+                    if(el.classList.contains('mouse-button')) {
+                        el.classList.add('mouse-bound');
+                    } else {
+                        el.classList.add('key-bound');
+                    }
+                });
             });
             
             gameListContainer.appendChild(gameCard);

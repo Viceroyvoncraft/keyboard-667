@@ -12,13 +12,9 @@ header {
 }
 
 h1 {
-    color: #ffa500; /* Naranja Mecánico */
+    color: #ffa500;
     text-transform: uppercase;
     letter-spacing: 2px;
-}
-
-.search-container {
-    margin-top: 1em;
 }
 
 #searchInput {
@@ -33,8 +29,9 @@ h1 {
 
 #gameList {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
-    gap: 1.5em;
+    /* Ajustamos el tamaño mínimo para dar cabida al teclado completo */
+    grid-template-columns: repeat(auto-fill, minmax(650px, 1fr));
+    gap: 2em;
 }
 
 .game-card {
@@ -43,8 +40,6 @@ h1 {
     border-radius: 8px;
     padding: 1.5em;
     box-shadow: 0 4px 8px rgba(0,0,0,0.4);
-    display: flex;
-    flex-direction: column;
 }
 
 .game-card h2 {
@@ -52,50 +47,96 @@ h1 {
     color: #ffa500;
 }
 
-.game-card p {
-    margin: 0.5em 0;
-    line-height: 1.6;
+/* --- NUEVOS ESTILOS: CONTENEDOR DE CONTROLES --- */
+.controls-container {
+    display: flex;
+    gap: 2em;
+    margin-top: 1.5em;
+    align-items: flex-start;
 }
 
-/* --- NUEVOS ESTILOS PARA EL TECLADO --- */
+/* --- NUEVOS ESTILOS: DIAGRAMA DEL RATÓN --- */
+.mouse-display {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 
+.mouse-body {
+    width: 80px;
+    height: 140px;
+    background-color: #444;
+    border: 2px solid #666;
+    border-radius: 40px 40px 20px 20px;
+    display: flex;
+    justify-content: center;
+    position: relative;
+    padding-top: 10px;
+}
+
+.mouse-button {
+    width: 35px;
+    height: 60px;
+    border: 1px solid #333;
+    background-color: #555;
+}
+
+.mouse-button.left {
+    border-top-left-radius: 30px;
+}
+.mouse-button.right {
+    border-top-right-radius: 30px;
+}
+
+.mouse-wheel {
+    width: 10px;
+    height: 30px;
+    background-color: #333;
+    position: absolute;
+    top: 10px;
+    border-radius: 5px;
+}
+
+/* --- ESTILOS MEJORADOS: TECLADO COMPLETO --- */
 .keyboard-display {
-    margin-top: 1.5em;
     padding: 1em;
     background-color: #1e1e1e;
     border-radius: 5px;
     border: 1px solid #555;
+    flex-grow: 1; /* Permite que el teclado ocupe el espacio restante */
 }
 
 .keyboard-row {
     display: flex;
     justify-content: center;
-    margin-bottom: 5px;
+    margin-bottom: 6px;
 }
 
 .key {
-    display: inline-block;
-    padding: 10px 15px;
-    margin: 2px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 40px;
+    min-width: 40px;
+    padding: 0 5px;
+    margin: 0 3px;
     border: 1px solid #666;
-    background-color: #444;
+    /* El estado latente (gris) por defecto para teclas no asignadas */
+    background-color: #555;
     border-radius: 4px;
-    min-width: 20px;
-    text-align: center;
     font-weight: bold;
     color: #ccc;
+    font-size: 12px;
 }
 
-.key-wide {
-    padding: 10px 30px;
-}
+/* Clases para anchos de teclas especiales */
+.key-1-5x { flex-grow: 1.5; }
+.key-2x { flex-grow: 2; }
+.key-2-5x { flex-grow: 2.5; }
+.key-space { flex-grow: 10; }
 
-.key-space {
-    width: 250px;
-}
-
-/* El estado sagrado de una tecla en uso */
-.key-bound {
+/* El estado sagrado de un control en uso (teclado o ratón) */
+.key-bound, .mouse-bound {
     background-color: #ffa500;
     color: #1a1a1a;
     border-color: #ffc864;
