@@ -1,0 +1,18 @@
+[
+  {
+    "id": 1,
+    "title": "Half-Life 2",
+    "developer": "Valve Corporation",
+    "release_year": 2004,
+    "genre": "First-person shooter",
+    "notes": "Classic FPS controls."
+  },
+  {
+    "id": 2,
+    "title": "StarCraft II",
+    "developer": "Blizzard Entertainment",
+    "release_year": 2010,
+    "genre": "Real-time strategy",
+    "notes": "Extensive use of hotkeys."
+  }
+]
