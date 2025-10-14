@@ -3,18 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Base de Datos de Teclados</title>
+    <title>Adeptus Mechanicus Keymapper</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header>
-        <h1>Base de Datos de Teclados</h1>
-        <div class="search-container">
-            <input type="text" id="searchInput" placeholder="Busca un juego por título o desarrollador...">
+    <h1>Santuario de Mapeo de Teclas</h1>
+
+    <div class="main-container">
+        <div class="keyboard-container">
+            <div id="keyboard" class="keyboard">
+                </div>
         </div>
-    </header>
-    <main id="gameList">
-        </main>
+        <div class="legend-container">
+            <h2>Leyenda de Mapeo</h2>
+            <div id="legend" class="legend">
+                </div>
+        </div>
+    </div>
+
+    <div class="export-controls">
+        <button id="export-png-btn">Exportar como PNG</button>
+        <button id="export-pdf-btn">Exportar como PDF</button>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     
     <script src="script.js"></script>
 </body>

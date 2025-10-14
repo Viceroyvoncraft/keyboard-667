@@ -1,121 +1,158 @@
-document.addEventListener('DOMContentLoaded', () => {
+// Invocación de los Componentes Estructurales
+const keyboardContainer = document.getElementById('keyboard');
+const legendContainer = document.getElementById('legend');
+const contentToExport = document.querySelector('.main-container');
+const exportPngBtn = document.getElementById('export-png-btn');
+const exportPdfBtn = document.getElementById('export-pdf-btn');
 
-    const games = [
-        {
-            "id": 1,
-            "title": "Half-Life 2",
-            "developer": "Valve Corporation",
-            // Estructura de datos restaurada al original
-            "controls": {
-                "Move Forward": "W", "Move Back": "S", "Strafe Left": "A", "Strafe Right": "D",
-                "Jump": "Space", "Crouch": "LCtrl", "Primary Fire": "Mouse 1", "Secondary Fire": "Mouse 2",
-                "Use / Interact": "E", "Reload": "R", "Flashlight": "F", "Sprint": "LShift", "Gravity Gun": "G",
-                "Quick Save": "F5", "Quick Load": "F9"
-            }
-        }
-    ];
+// Data-Codex de la Disposición Consagrada
+const keyboardLayout = [
+    // Fila de Funciones (F-Row) - 19u total
+    [{ text: 'Esc', u: 1 }, { u: 1 }, { text: 'F1', u: 1 }, { text: 'F2', u: 1 }, { text: 'F3', u: 1 }, { text: 'F4', u: 1 }, { u: 0.5 }, { text: 'F5', u: 1 }, { text: 'F6', u: 1 }, { text: 'F7', u: 1 }, { text: 'F8', u: 1 }, { u: 0.5 }, { text: 'F9', u: 1 }, { text: 'F10', u: 1 }, { text: 'F11', u: 1 }, { text: 'F12', u: 1 }, { u: 0.25 }, { text: 'PrtSc', u: 1 }, { text: 'Scroll Lock', u: 1 }, { text: 'Pause Break', u: 1 }],
+    // Fila de Números - 15u + 3u = 18u
+    [{ text: '`', sub: '~', u: 1 }, { text: '1', sub: '!', u: 1 }, { text: '2', sub: '@', u: 1 }, { text: '3', sub: '#', u: 1 }, { text: '4', sub: '$', u: 1 }, { text: '5', sub: '%', u: 1 }, { text: '6', sub: '^', u: 1 }, { text: '7', sub: '&', u: 1 }, { text: '8', sub: '*', u: 1 }, { text: '9', sub: '(', u: 1 }, { text: '0', sub: ')', u: 1 }, { text: '-', sub: '_', u: 1 }, { text: '=', sub: '+', u: 1 }, { text: 'Backspace', u: 2 }, { u: 0.25 }, { text: 'Insert', u: 1 }, { text: 'Home', u: 1 }, { text: 'PgUp', u: 1 }],
+    // Fila Superior de Letras - 1.5 + 11 + 1.5 = 14u | +3u
+    [{ text: 'Tab', u: 1.5 }, { text: 'Q', u: 1 }, { text: 'W', u: 1 }, { text: 'E', u: 1 }, { text: 'R', u: 1 }, { text: 'T', u: 1 }, { text: 'Y', u: 1 }, { text: 'U', u: 1 }, { text: 'I', u: 1 }, { text: 'O', u: 1 }, { text: 'P', u: 1 }, { text: '[', sub: '{', u: 1 }, { text: ']', sub: '}', u: 1 }, { text: '\\', sub: '|', u: 1.5 }, { u: 0.25 }, { text: 'Delete', u: 1 }, { text: 'End', u: 1 }, { text: 'PgDn', u: 1 }],
+    // Fila Media de Letras - 1.75 + 10 + 2.25 = 14u
+    [{ text: 'Caps Lock', u: 1.75 }, { text: 'A', u: 1 }, { text: 'S', u: 1 }, { text: 'D', u: 1 }, { text: 'F', u: 1 }, { text: 'G', u: 1 }, { text: 'H', u: 1 }, { text: 'J', u: 1 }, { text: 'K', u: 1 }, { text: 'L', u: 1 }, { text: ';', sub: ':', u: 1 }, { text: "'", sub: '"', u: 1 }, { text: 'Enter', u: 2.25 }, {u: 4.25}],
+    // Fila Inferior de Letras - 2.25 + 10 + 1.75 = 14u | +1u + 3u
+    [{ text: 'Shift', u: 2.25 }, { text: 'Z', u: 1 }, { text: 'X', u: 1 }, { text: 'C', u: 1 }, { text: 'V', u: 1 }, { text: 'B', u: 1 }, { text: 'N', u: 1 }, { text: 'M', u: 1 }, { text: ',', sub: '<', u: 1 }, { text: '.', sub: '>', u: 1 }, { text: '/', sub: '?', u: 1 }, { text: 'Shift', u: 1.75 }, { u: 1.25 }, { text: '↑', u: 1 }, {u: 2}],
+    // Fila de Modificadores - 1.25*3 + 6.25 + 1.25*4 = 15u | + 3u
+    [{ text: 'Ctrl', u: 1.25 }, { text: 'Win', u: 1.25 }, { text: 'Alt', u: 1.25 }, { text: 'Space', u: 6.25 }, { text: 'Alt', u: 1.25 }, { text: 'Win', u: 1.25 }, { text: 'Menu', u: 1.25 }, { text: 'Ctrl', u: 1.25 }, { u: 0.25 }, { text: '←', u: 1 }, { text: '↓', u: 1 }, { text: '→', u: 1 }]
+].flat(); // Aplanamos el array para un único bucle de renderizado
 
-    const gameListContainer = document.getElementById('gameList');
+// Cogitator para Rastrear Teclas Mapeadas
+let mappedKeys = new Map();
 
-    function getMouseHtml() {
-        return `
-            <div class="mouse-display">
-                <div class="mouse-body">
-                    <div class="mouse-button left" data-key="Mouse 1"></div>
-                    <div class="mouse-wheel" data-key="Mouse 3"></div>
-                    <div class="mouse-button right" data-key="Mouse 2"></div>
-                </div>
-                <p>Ratón</p>
-            </div>
-        `;
-    }
+/**
+ * Rito de Forjado del Teclado.
+ * Manifiesta el teclado basado en la disposición consagrada.
+ */
+function renderKeyboard() {
+    keyboardContainer.innerHTML = ''; // Purga la manifestación anterior
 
-    /**
-     * Genera el HTML para una representación de teclado 100%
-     */
-    function getKeyboardHtml() {
-        const main = [
-            ["Esc", "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10", "F11", "F12"],
-            ["`", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "=", {key: "Backspace", class: "key-long"}],
-            [{key: "Tab", class: "key-tab"}, "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P", "[", "]", {key: "\\", class: "key-tab"}],
-            [{key: "Caps Lock", class: "key-caps"}, "A", "S", "D", "F", "G", "H", "J", "K", "L", ";", "'", {key: "Enter", class: "key-enter"}],
-            [{key: "LShift", class: "key-shift"}, "Z", "X", "C", "V", "B", "N", "M", ",", ".", "/", {key: "RShift", class: "key-shift"}],
-            [{key: "LCtrl", class: "key-bottom"}, "LSuper", "LAlt", {key: "Space", class: "key-space"}, "RAlt", "RSuper", "Menu", {key: "RCtrl", class: "key-bottom"}]
-        ];
-        const nav = [
-            ["PrtScr", "ScrLk", "Pause"],
-            ["Insert", "Home", "Page Up"],
-            ["Delete", "End", "Page Dn"]
-        ];
-        const arrows = [
-            [{key: "Up", id: "Up"}],
-            ["Left", "Down", "Right"]
-        ];
-
-        const buildBlock = (block) => block.map(row => 
-            `<div class="keyboard-row">${row.map(item => {
-                const key = typeof item === 'object' ? item.key : item;
-                const cls = typeof item === 'object' ? item.class : '';
-                return `<div class="key ${cls}" data-key="${key}">${key}</div>`;
-            }).join('')}</div>`
-        ).join('');
+    keyboardLayout.forEach(keyData => {
+        const element = document.createElement('div');
         
-        return `
-            <div class="keyboard-display">
-                <div class="keyboard-main-block">${buildBlock(main)}</div>
-                <div class="keyboard-nav-numpad-block">
-                    <div class="keyboard-nav-block">${buildBlock(nav)}</div>
-                    <div style="height: 20px;"></div>
-                    <div class="keyboard-arrows-block">
-                         <div class="keyboard-row" style="justify-content: center;">
-                            <div class="key" data-key="Up">Up</div>
-                        </div>
-                        <div class="keyboard-row">
-                            <div class="key" data-key="Left">Left</div>
-                            <div class="key" data-key="Down">Down</div>
-                            <div class="key" data-key="Right">Right</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        `;
-    }
+        // La rejilla es de 75 columnas. 1u = 4 columnas.
+        const columnSpan = Math.round(keyData.u * 4);
+        element.style.gridColumn = `span ${columnSpan}`;
+        
+        if (keyData.text) {
+            // Es una tecla funcional
+            element.classList.add('key');
+            element.dataset.keyId = keyData.text;
 
-    function displayGames(gamesToDisplay) {
-        gameListContainer.innerHTML = '';
-        if (gamesToDisplay.length === 0) { return; }
+            const mainText = document.createElement('span');
+            mainText.textContent = keyData.text;
+            element.appendChild(mainText);
 
-        gamesToDisplay.forEach(game => {
-            const gameCard = document.createElement('div');
-            gameCard.classList.add('game-card');
-            
-            gameCard.innerHTML = `
-                <h2>${game.title}</h2>
-                <div class="controls-container">
-                    ${getKeyboardHtml()}
-                    ${getMouseHtml()}
-                </div>
-            `;
-            
-            // Lógica de resaltado restaurada a la original
-            const boundControls = Object.values(game.controls);
-            boundControls.forEach(controlName => {
-                const elements = gameCard.querySelectorAll(`[data-key="${controlName}"]`);
-                elements.forEach(el => {
-                    const className = el.classList.contains('mouse-button') ? 'mouse-bound' : 'key-bound';
-                    el.classList.add(className);
-                });
-            });
-            
-            gameListContainer.appendChild(gameCard);
-        });
-    }
-
-    // El buscador no necesita cambios, se omite por brevedad pero debe permanecer en tu código
-    const searchInput = document.getElementById('searchInput');
-    searchInput.addEventListener('input', (event) => {
-        // ... Lógica de búsqueda sin cambios ...
+            if (keyData.sub) {
+                const subText = document.createElement('span');
+                subText.classList.add('key-sub-text');
+                subText.textContent = keyData.sub;
+                element.appendChild(subText);
+            }
+        } else {
+            // Es un espacio vacío
+            element.classList.add('key-spacer');
+        }
+        keyboardContainer.appendChild(element);
     });
+}
 
-    displayGames(games);
+/**
+ * Litania de Adición a la Leyenda.
+ */
+function addKeyToLegend(keyId, keyElement) {
+    const legendItem = document.createElement('div');
+    legendItem.classList.add('legend-item');
+    legendItem.dataset.keyId = keyId;
+
+    legendItem.innerHTML = `
+        <span class="legend-key-name">${keyId}</span>
+        <input type="color" class="legend-color-picker" value="#ff8c00">
+        <button class="delete-btn">X</button>
+    `;
+
+    legendContainer.appendChild(legendItem);
+    mappedKeys.set(keyId, { keyElement, legendItem });
+
+    const colorPicker = legendItem.querySelector('.legend-color-picker');
+    keyElement.style.backgroundColor = colorPicker.value;
+}
+
+/**
+ * Rito de Eliminación de la Leyenda.
+ */
+function removeKeyFromLegend(keyId) {
+    const mapping = mappedKeys.get(keyId);
+    if (!mapping) return;
+
+    mapping.keyElement.style.backgroundColor = '';
+    mapping.legendItem.remove();
+    mappedKeys.delete(keyId);
+}
+
+// --- CÁNTICOS DE ATENCIÓN (Event Listeners) ---
+
+keyboardContainer.addEventListener('click', (event) => {
+    const keyElement = event.target.closest('.key');
+    if (keyElement) {
+        const keyId = keyElement.dataset.keyId;
+        if (mappedKeys.has(keyId)) {
+            removeKeyFromLegend(keyId);
+        } else {
+            addKeyToLegend(keyId, keyElement);
+        }
+    }
 });
+
+legendContainer.addEventListener('input', (event) => {
+    if (event.target.classList.contains('legend-color-picker')) {
+        const color = event.target.value;
+        const keyId = event.target.closest('.legend-item').dataset.keyId;
+        const mapping = mappedKeys.get(keyId);
+        if (mapping) {
+            mapping.keyElement.style.backgroundColor = color;
+        }
+    }
+});
+
+legendContainer.addEventListener('click', (event) => {
+    if (event.target.classList.contains('delete-btn')) {
+        const keyId = event.target.closest('.legend-item').dataset.keyId;
+        removeKeyFromLegend(keyId);
+    }
+});
+
+// --- RITOS DE EXPORTACIÓN ---
+
+function exportAsPNG() {
+    html2canvas(contentToExport).then(canvas => {
+        const link = document.createElement('a');
+        link.href = canvas.toDataURL('image/png');
+        link.download = 'keyboard-mapping.png';
+        link.click();
+    });
+}
+
+function exportAsPDF() {
+    const { jsPDF } = window.jspdf;
+    html2canvas(contentToExport).then(canvas => {
+        const imageData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF({
+            orientation: 'landscape',
+            unit: 'px',
+            format: [canvas.width, canvas.height]
+        });
+        pdf.addImage(imageData, 'PNG', 0, 0, canvas.width, canvas.height);
+        pdf.save('keyboard-mapping.pdf');
+    });
+}
+
+exportPngBtn.addEventListener('click', exportAsPNG);
+exportPdfBtn.addEventListener('click', exportAsPDF);
+
+// --- RITO DE INICIACIÓN ---
+renderKeyboard();
