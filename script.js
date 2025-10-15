@@ -5,6 +5,14 @@ const exportPngBtn = document.getElementById('export-png-btn');
 const exportJpgBtn = document.getElementById('export-jpg-btn');
 const exportPdfBtn = document.getElementById('export-pdf-btn');
 
+// Data-Codex de Etiquetas y Colores
+const tagColors = {
+    'Actions': '#FC9C93',
+    'Target': '#f1c54cff',
+    'Movement': '#7CC690',
+    'Game Menus': '#E4A0DB'
+};
+
 // Data-Codex de la Disposición Consagrada (Versión Definitiva)
 const keyboardLayout = [
     // Fila 1: Funciones
@@ -16,12 +24,12 @@ const keyboardLayout = [
     // Fila 4: ASDF (Home Row)
     [{ text: 'Caps Lock', u: 1.75 }, { text: 'A', u: 1 }, { text: 'S', u: 1 }, { text: 'D', u: 1 }, { text: 'F', u: 1 }, { text: 'G', u: 1 }, { text: 'H', u: 1 }, { text: 'J', u: 1 }, { text: 'K', u: 1 }, { text: 'L', u: 1 }, { text: ';', sub: ':', u: 1 }, { text: "'", sub: '"', u: 1 }, { text: 'Enter', u: 2.25 },{ u: 3 }],
     // Fila 5: ZXCV (Bottom Alpha Row)
-    [{ text: 'Shift', u: 2.25 }, { text: 'Z', u: 1 }, { text: 'X', u: 1 }, { text: 'C', u: 1 }, { text: 'V', u: 1 }, { text: 'B', u: 1 }, { text: 'N', u: 1 }, { text: 'M', u: 1 }, { text: ',', sub: '<', u: 1 }, { text: '.', sub: '>', u: 1 }, { text: '/', sub: '?', u: 1 }, { text: 'Shift', u: 2.75 }, { u: 1.35 }, { text: '↑', u: 1 },{ u: 1.25 }],
+    [{ text: 'LShift', u: 2.25 }, { text: 'Z', u: 1 }, { text: 'X', u: 1 }, { text: 'C', u: 1 }, { text: 'V', u: 1 }, { text: 'B', u: 1 }, { text: 'N', u: 1 }, { text: 'M', u: 1 }, { text: ',', sub: '<', u: 1 }, { text: '.', sub: '>', u: 1 }, { text: '/', sub: '?', u: 1 }, { text: 'RShift', u: 2.75 }, { u: 1.35 }, { text: '↑', u: 1 },{ u: 1.25 }],
     // Fila 6: Modificadores
-    [{ text: 'Ctrl', u: 1.25 }, { text: 'Win', u: 1.25 }, { text: 'Alt', u: 1.25 }, { text: 'Space', u: 6.25 }, { text: 'Alt', u: 1.25 }, { text: 'Win', u: 1.25 }, { text: 'Menu', u: 1.25 }, { text: 'Ctrl', u: 1.25 }, { u: 0.25 }, { text: '←', u: 1 }, { text: '↓', u: 1 }, { text: '→', u: 1 }]
+    [{ text: 'LCtrl', u: 1.25 }, { text: 'Win', u: 1.25 }, { text: 'Alt', u: 1.25 }, { text: 'Space', u: 6.25 }, { text: 'Alt Gr', u: 1.25 }, { text: 'Win', u: 1.25 }, { text: 'Menu', u: 1.25 }, { text: 'RCtrl', u: 1.25 }, { u: 0.25 }, { text: '←', u: 1 }, { text: '↓', u: 1 }, { text: '→', u: 1 }]
 ];
 
-// Cogitator para Rastrear Teclas Mapeadas
+
 let mappedKeys = new Map();
 
 function renderKeyboard() {
@@ -55,16 +63,49 @@ function addKeyToLegend(keyId, keyElement) {
     const legendItem = document.createElement('div');
     legendItem.classList.add('legend-item');
     legendItem.dataset.keyId = keyId;
-    legendItem.innerHTML = `
-        <span class="legend-key-name">${keyId}</span>
-        <input type="color" class="legend-color-picker" value="#ff8c00">
-        <button class="delete-btn">X</button>
-    `;
+
+    const topRow = document.createElement('div');
+    topRow.style.display = 'flex';
+    topRow.style.width = '100%';
+    topRow.style.alignItems = 'center';
+
+    const keyNameSpan = document.createElement('span');
+    keyNameSpan.classList.add('legend-key-name');
+    keyNameSpan.textContent = keyId;
+
+    const tagSelector = document.createElement('select');
+    tagSelector.classList.add('tag-selector');
+    for (const tagName in tagColors) {
+        const option = document.createElement('option');
+        option.value = tagName;
+        option.textContent = tagName;
+        tagSelector.appendChild(option);
+    }
+
+    const deleteButton = document.createElement('button');
+    deleteButton.classList.add('delete-btn');
+    deleteButton.textContent = 'X';
+
+    topRow.appendChild(keyNameSpan);
+    topRow.appendChild(tagSelector);
+    topRow.appendChild(deleteButton);
+
+    const descriptionInput = document.createElement('input');
+    descriptionInput.type = 'text';
+    descriptionInput.classList.add('description-input');
+    descriptionInput.placeholder = 'Añade una descripción...';
+
+    legendItem.appendChild(topRow);
+    legendItem.appendChild(descriptionInput);
+    
     legendContainer.appendChild(legendItem);
     mappedKeys.set(keyId, { keyElement, legendItem });
-    const colorPicker = legendItem.querySelector('.legend-color-picker');
-    keyElement.style.backgroundColor = colorPicker.value;
-    keyElement.style.color = '#FFFFFF';
+
+    const defaultTag = Object.keys(tagColors)[0];
+    const defaultColor = tagColors[defaultTag];
+    
+    keyElement.style.backgroundColor = defaultColor;
+    keyElement.style.color = '#000000';
     keyElement.style.boxShadow = 'none';
 }
 
@@ -90,14 +131,15 @@ keyboardContainer.addEventListener('click', (event) => {
     }
 });
 
-legendContainer.addEventListener('input', (event) => {
-    if (event.target.classList.contains('legend-color-picker')) {
-        const color = event.target.value;
+legendContainer.addEventListener('change', (event) => {
+    if (event.target.classList.contains('tag-selector')) {
+        const selectedTag = event.target.value;
+        const color = tagColors[selectedTag];
         const keyId = event.target.closest('.legend-item').dataset.keyId;
         const mapping = mappedKeys.get(keyId);
         if (mapping) {
             mapping.keyElement.style.backgroundColor = color;
-            mapping.keyElement.style.color = '#FFFFFF';
+            mapping.keyElement.style.color = '#000000';
             mapping.keyElement.style.boxShadow = 'none';
         }
     }
@@ -110,55 +152,83 @@ legendContainer.addEventListener('click', (event) => {
     }
 });
 
-// --- RITOS DE EXPORTACIÓN (VERSIÓN FINAL Y PURIFICADA) ---
-async function performExport(format, quality = 1.0) {
-    // 1. Clonar el contenedor principal que ya tiene todos los estilos y la estructura correcta.
-    const elementToCapture = document.querySelector('.main-container').cloneNode(true);
-    
-    // 2. Crear un contenedor temporal para posicionar el clon fuera de la pantalla.
-    const offscreenContainer = document.createElement('div');
-    offscreenContainer.style.position = 'absolute';
-    offscreenContainer.style.left = '-9999px';
-    offscreenContainer.style.top = '0';
-    
-    // 3. Añadir el clon al contenedor temporal y luego al cuerpo del documento.
-    offscreenContainer.appendChild(elementToCapture);
-    document.body.appendChild(offscreenContainer);
-    
-    try {
-        const canvas = await html2canvas(elementToCapture, {
-            // Se usa el color de fondo del elemento clonado, que ahora está definido en el CSS.
-            useCORS: true,
-            scale: 2 // Escala para mayor resolución
-        });
+// --- RITO DE EXPORTACIÓN ESQUEMÁTICA ---
+async function performSchematicExport(format = 'png') {
+    if (mappedKeys.size === 0) {
+        alert("No hay teclas mapeadas para generar un diagrama.");
+        return;
+    }
 
-        if (format === 'pdf') {
-            const imageData = canvas.toDataURL('image/png');
-            const { jsPDF } = window.jspdf;
-            const pdf = new jsPDF({
-                orientation: canvas.width > canvas.height ? 'landscape' : 'portrait',
-                unit: 'px',
-                format: [canvas.width, canvas.height]
-            });
-            pdf.addImage(imageData, 'PNG', 0, 0, canvas.width, canvas.height);
-            pdf.save('keyboard-mapping.pdf');
-        } else {
-            const mimeType = `image/${format}`;
-            const fileExtension = format;
-            const link = document.createElement('a');
-            link.href = canvas.toDataURL(mimeType, quality);
-            link.download = `keyboard-mapping.${fileExtension}`;
-            link.click();
-        }
-    } finally {
-        // 4. Purgar el contenedor temporal y su clon, sin dejar rastro.
-        document.body.removeChild(offscreenContainer);
+    const keyboardElement = document.querySelector('#keyboard');
+    const keyboardCanvas = await html2canvas(keyboardElement, { scale: 2, backgroundColor: null });
+    
+    const padding = 80;
+    const columnWidth = 250;
+    const lineHeight = 35;
+    const mappedKeysArray = Array.from(mappedKeys.values());
+    
+    const finalCanvas = document.createElement('canvas');
+    const ctx = finalCanvas.getContext('2d');
+
+    const requiredHeight = (Math.ceil(mappedKeysArray.length / 2) * lineHeight) + (2 * padding);
+    finalCanvas.width = keyboardCanvas.width + (2 * columnWidth) + (2 * padding);
+    finalCanvas.height = Math.max(keyboardCanvas.height + (2 * padding), requiredHeight);
+    
+    ctx.fillStyle = '#1a1a1a';
+    ctx.fillRect(0, 0, finalCanvas.width, finalCanvas.height);
+    ctx.drawImage(keyboardCanvas, columnWidth + padding, padding);
+
+    ctx.font = '16px monospace';
+    ctx.fillStyle = '#e0e0e0';
+    ctx.strokeStyle = '#cccccc';
+    ctx.lineWidth = 1.5;
+
+    const keyboardRect = keyboardElement.getBoundingClientRect();
+    const leftColumn = mappedKeysArray.slice(0, Math.ceil(mappedKeysArray.length / 2));
+    const rightColumn = mappedKeysArray.slice(Math.ceil(mappedKeysArray.length / 2));
+
+    const drawGuidanceVector = (keyElement, text, textX, textY) => {
+        const keyRect = keyElement.getBoundingClientRect();
+        const keyCenterX = (keyRect.left - keyboardRect.left + keyRect.width / 2) * 2 + columnWidth + padding;
+        const keyCenterY = (keyRect.top - keyboardRect.top + keyRect.height / 2) * 2 + padding;
+
+        ctx.textAlign = textX < keyCenterX ? 'right' : 'left';
+        ctx.fillText(`${keyElement.dataset.keyId}: ${text}`, textX, textY);
+        
+        ctx.beginPath();
+        ctx.moveTo(keyCenterX, keyCenterY);
+        const textAnchorX = textX < keyCenterX ? textX + 5 : textX - 5;
+        ctx.lineTo(textAnchorX, textY - 6);
+        ctx.stroke();
+    };
+
+    leftColumn.forEach((mapping, index) => {
+        const description = mapping.legendItem.querySelector('.description-input').value || 'Sin descripción';
+        drawGuidanceVector(mapping.keyElement, description, columnWidth, padding + (index * lineHeight));
+    });
+
+    rightColumn.forEach((mapping, index) => {
+        const description = mapping.legendItem.querySelector('.description-input').value || 'Sin descripción';
+        drawGuidanceVector(mapping.keyElement, description, finalCanvas.width - columnWidth, padding + (index * lineHeight));
+    });
+
+    // Finalizar y descargar
+    if (format === 'pdf') {
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF({ orientation: 'landscape', unit: 'px', format: [finalCanvas.width, finalCanvas.height] });
+        pdf.addImage(finalCanvas.toDataURL('image/png'), 'PNG', 0, 0, finalCanvas.width, finalCanvas.height);
+        pdf.save('keyboard-schematic.pdf');
+    } else {
+        const link = document.createElement('a');
+        link.href = finalCanvas.toDataURL(`image/${format}`);
+        link.download = `keyboard-schematic.${format}`;
+        link.click();
     }
 }
 
-exportPngBtn.addEventListener('click', () => performExport('png'));
-exportJpgBtn.addEventListener('click', () => performExport('jpeg', 0.9));
-exportPdfBtn.addEventListener('click', () => performExport('pdf'));
+exportPngBtn.addEventListener('click', () => performSchematicExport('png'));
+exportJpgBtn.addEventListener('click', () => performSchematicExport('jpeg'));
+exportPdfBtn.addEventListener('click', () => performSchematicExport('pdf'));
 
 // --- RITO DE INICIACIÓN ---
 renderKeyboard();
