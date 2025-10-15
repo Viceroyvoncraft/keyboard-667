@@ -1,8 +1,8 @@
 // Invocación de los Componentes Estructurales
 const keyboardContainer = document.getElementById('keyboard');
 const legendContainer = document.getElementById('legend');
-const contentToExport = document.querySelector('.main-container');
 const exportPngBtn = document.getElementById('export-png-btn');
+const exportJpgBtn = document.getElementById('export-jpg-btn');
 const exportPdfBtn = document.getElementById('export-pdf-btn');
 
 // Data-Codex de la Disposición Consagrada (Versión Definitiva)
@@ -24,9 +24,6 @@ const keyboardLayout = [
 // Cogitator para Rastrear Teclas Mapeadas
 let mappedKeys = new Map();
 
-/**
- * Rito de Forjado del Teclado.
- */
 function renderKeyboard() {
     keyboardContainer.innerHTML = '';
     keyboardLayout.forEach(row => {
@@ -54,9 +51,6 @@ function renderKeyboard() {
     });
 }
 
-/**
- * Litania de Adición a la Leyenda.
- */
 function addKeyToLegend(keyId, keyElement) {
     const legendItem = document.createElement('div');
     legendItem.classList.add('legend-item');
@@ -70,20 +64,20 @@ function addKeyToLegend(keyId, keyElement) {
     mappedKeys.set(keyId, { keyElement, legendItem });
     const colorPicker = legendItem.querySelector('.legend-color-picker');
     keyElement.style.backgroundColor = colorPicker.value;
+    keyElement.style.color = '#FFFFFF';
+    keyElement.style.boxShadow = 'none';
 }
 
-/**
- * Rito de Eliminación de la Leyenda.
- */
 function removeKeyFromLegend(keyId) {
     const mapping = mappedKeys.get(keyId);
     if (!mapping) return;
     mapping.keyElement.style.backgroundColor = '';
+    mapping.keyElement.style.color = '';
+    mapping.keyElement.style.boxShadow = '';
     mapping.legendItem.remove();
     mappedKeys.delete(keyId);
 }
 
-// --- CÁNTICOS DE ATENCIÓN (Event Listeners) ---
 keyboardContainer.addEventListener('click', (event) => {
     const keyElement = event.target.closest('.key');
     if (keyElement) {
@@ -103,6 +97,8 @@ legendContainer.addEventListener('input', (event) => {
         const mapping = mappedKeys.get(keyId);
         if (mapping) {
             mapping.keyElement.style.backgroundColor = color;
+            mapping.keyElement.style.color = '#FFFFFF';
+            mapping.keyElement.style.boxShadow = 'none';
         }
     }
 });
@@ -114,32 +110,55 @@ legendContainer.addEventListener('click', (event) => {
     }
 });
 
-// --- RITOS DE EXPORTACIÓN ---
-function exportAsPNG() {
-    html2canvas(contentToExport).then(canvas => {
-        const link = document.createElement('a');
-        link.href = canvas.toDataURL('image/png');
-        link.download = 'keyboard-mapping.png';
-        link.click();
-    });
-}
-
-function exportAsPDF() {
-    const { jsPDF } = window.jspdf;
-    html2canvas(contentToExport).then(canvas => {
-        const imageData = canvas.toDataURL('image/png');
-        const pdf = new jsPDF({
-            orientation: 'landscape',
-            unit: 'px',
-            format: [canvas.width, canvas.height]
+// --- RITOS DE EXPORTACIÓN (VERSIÓN FINAL Y PURIFICADA) ---
+async function performExport(format, quality = 1.0) {
+    // 1. Clonar el contenedor principal que ya tiene todos los estilos y la estructura correcta.
+    const elementToCapture = document.querySelector('.main-container').cloneNode(true);
+    
+    // 2. Crear un contenedor temporal para posicionar el clon fuera de la pantalla.
+    const offscreenContainer = document.createElement('div');
+    offscreenContainer.style.position = 'absolute';
+    offscreenContainer.style.left = '-9999px';
+    offscreenContainer.style.top = '0';
+    
+    // 3. Añadir el clon al contenedor temporal y luego al cuerpo del documento.
+    offscreenContainer.appendChild(elementToCapture);
+    document.body.appendChild(offscreenContainer);
+    
+    try {
+        const canvas = await html2canvas(elementToCapture, {
+            // Se usa el color de fondo del elemento clonado, que ahora está definido en el CSS.
+            useCORS: true,
+            scale: 2 // Escala para mayor resolución
         });
-        pdf.addImage(imageData, 'PNG', 0, 0, canvas.width, canvas.height);
-        pdf.save('keyboard-mapping.pdf');
-    });
+
+        if (format === 'pdf') {
+            const imageData = canvas.toDataURL('image/png');
+            const { jsPDF } = window.jspdf;
+            const pdf = new jsPDF({
+                orientation: canvas.width > canvas.height ? 'landscape' : 'portrait',
+                unit: 'px',
+                format: [canvas.width, canvas.height]
+            });
+            pdf.addImage(imageData, 'PNG', 0, 0, canvas.width, canvas.height);
+            pdf.save('keyboard-mapping.pdf');
+        } else {
+            const mimeType = `image/${format}`;
+            const fileExtension = format;
+            const link = document.createElement('a');
+            link.href = canvas.toDataURL(mimeType, quality);
+            link.download = `keyboard-mapping.${fileExtension}`;
+            link.click();
+        }
+    } finally {
+        // 4. Purgar el contenedor temporal y su clon, sin dejar rastro.
+        document.body.removeChild(offscreenContainer);
+    }
 }
 
-exportPngBtn.addEventListener('click', exportAsPNG);
-exportPdfBtn.addEventListener('click', exportAsPDF);
+exportPngBtn.addEventListener('click', () => performExport('png'));
+exportJpgBtn.addEventListener('click', () => performExport('jpeg', 0.9));
+exportPdfBtn.addEventListener('click', () => performExport('pdf'));
 
 // --- RITO DE INICIACIÓN ---
 renderKeyboard();
