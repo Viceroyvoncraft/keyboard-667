@@ -29,7 +29,6 @@ const keyboardLayout = [
     [{ text: 'LCtrl', u: 1.25 }, { text: 'Win', u: 1.25 }, { text: 'Alt', u: 1.25 }, { text: 'Space', u: 6.25 }, { text: 'Alt Gr', u: 1.25 }, { text: 'Win', u: 1.25 }, { text: 'Menu', u: 1.25 }, { text: 'RCtrl', u: 1.25 }, { u: 0.25 }, { text: '←', u: 1 }, { text: '↓', u: 1 }, { text: '→', u: 1 }]
 ];
 
-
 let mappedKeys = new Map();
 
 function renderKeyboard() {
@@ -152,7 +151,7 @@ legendContainer.addEventListener('click', (event) => {
     }
 });
 
-// --- RITO DE EXPORTACIÓN ESQUEMÁTICA ---
+// --- RITO DE EXPORTACIÓN ESQUEMÁTICA (VERSIÓN CON FONDO SELECTIVO) ---
 async function performSchematicExport(format = 'png') {
     if (mappedKeys.size === 0) {
         alert("No hay teclas mapeadas para generar un diagrama.");
@@ -164,7 +163,7 @@ async function performSchematicExport(format = 'png') {
     
     const padding = 80;
     const columnWidth = 250;
-    const lineHeight = 35;
+    const lineHeight = 40;
     const mappedKeysArray = Array.from(mappedKeys.values());
     
     const finalCanvas = document.createElement('canvas');
@@ -174,13 +173,19 @@ async function performSchematicExport(format = 'png') {
     finalCanvas.width = keyboardCanvas.width + (2 * columnWidth) + (2 * padding);
     finalCanvas.height = Math.max(keyboardCanvas.height + (2 * padding), requiredHeight);
     
-    ctx.fillStyle = '#1a1a1a';
-    ctx.fillRect(0, 0, finalCanvas.width, finalCanvas.height);
+    // --- CAMBIO CLAVE: LÓGICA DE FONDO CONDICIONAL ---
+    // Si el formato no es PNG, se aplica un fondo blanco.
+    if (format !== 'png') {
+        ctx.fillStyle = '#FFFFFF'; // Color blanco
+        ctx.fillRect(0, 0, finalCanvas.width, finalCanvas.height);
+    }
+    // Para PNG, esta sección se omite, resultando en un fondo transparente.
+    
     ctx.drawImage(keyboardCanvas, columnWidth + padding, padding);
 
-    ctx.font = '16px monospace';
-    ctx.fillStyle = '#e0e0e0';
-    ctx.strokeStyle = '#cccccc';
+    ctx.font = '20px monospace';
+    ctx.fillStyle = '#000000';
+    ctx.strokeStyle = '#000000';
     ctx.lineWidth = 1.5;
 
     const keyboardRect = keyboardElement.getBoundingClientRect();
@@ -198,7 +203,7 @@ async function performSchematicExport(format = 'png') {
         ctx.beginPath();
         ctx.moveTo(keyCenterX, keyCenterY);
         const textAnchorX = textX < keyCenterX ? textX + 5 : textX - 5;
-        ctx.lineTo(textAnchorX, textY - 6);
+        ctx.lineTo(textAnchorX, textY - 8);
         ctx.stroke();
     };
 
@@ -220,7 +225,9 @@ async function performSchematicExport(format = 'png') {
         pdf.save('keyboard-schematic.pdf');
     } else {
         const link = document.createElement('a');
-        link.href = finalCanvas.toDataURL(`image/${format}`);
+        // Para JPG, debemos usar 'image/jpeg'
+        const mimeType = format === 'jpeg' ? 'image/jpeg' : `image/${format}`;
+        link.href = finalCanvas.toDataURL(mimeType);
         link.download = `keyboard-schematic.${format}`;
         link.click();
     }
