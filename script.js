@@ -151,7 +151,8 @@ legendContainer.addEventListener('click', (event) => {
     }
 });
 
-// --- RITO DE EXPORTACIÓN ESQUEMÁTICA (VERSIÓN CON FONDO SELECTIVO) ---
+
+// --- RITO DE EXPORTACIÓN ESQUEMÁTICA (VERSIÓN CON CONTENCIÓN DE TEXTO) ---
 async function performSchematicExport(format = 'png') {
     if (mappedKeys.size === 0) {
         alert("No hay teclas mapeadas para generar un diagrama.");
@@ -159,80 +160,124 @@ async function performSchematicExport(format = 'png') {
     }
 
     const keyboardElement = document.querySelector('#keyboard');
+    keyboardElement.style.backgroundColor = '#d6d6d6';
     const keyboardCanvas = await html2canvas(keyboardElement, { scale: 2, backgroundColor: null });
-    
-    const padding = 80;
-    const columnWidth = 250;
-    const lineHeight = 40;
-    const mappedKeysArray = Array.from(mappedKeys.values());
+    keyboardElement.style.backgroundColor = '';
+
+    const padding = 100;
+    const columnWidth = 300;
+    const rowHeight = 100;
+    const lineHeight = 45;
     
     const finalCanvas = document.createElement('canvas');
     const ctx = finalCanvas.getContext('2d');
 
-    const requiredHeight = (Math.ceil(mappedKeysArray.length / 2) * lineHeight) + (2 * padding);
-    finalCanvas.width = keyboardCanvas.width + (2 * columnWidth) + (2 * padding);
-    finalCanvas.height = Math.max(keyboardCanvas.height + (2 * padding), requiredHeight);
-    
-    // --- CAMBIO CLAVE: LÓGICA DE FONDO CONDICIONAL ---
-    // Si el formato no es PNG, se aplica un fondo blanco.
-    if (format !== 'png') {
-        ctx.fillStyle = '#FFFFFF'; // Color blanco
-        ctx.fillRect(0, 0, finalCanvas.width, finalCanvas.height);
-    }
-    // Para PNG, esta sección se omite, resultando en un fondo transparente.
-    
-    ctx.drawImage(keyboardCanvas, columnWidth + padding, padding);
+    const keyboardRect = keyboardElement.getBoundingClientRect();
+    const keyboardCenterX = keyboardRect.left + keyboardRect.width / 2;
+    const keyboardCenterY = keyboardRect.top + keyboardRect.height / 2;
 
-    ctx.font = '20px monospace';
+    const leftKeys = [], rightKeys = [], topKeys = [], bottomKeys = [];
+    mappedKeys.forEach(mapping => {
+        const keyRect = mapping.keyElement.getBoundingClientRect();
+        const keyCenterX = keyRect.left + keyRect.width / 2;
+        const keyCenterY = keyRect.top + keyRect.height / 2;
+        const deltaX = Math.abs(keyCenterX - keyboardCenterX) / keyboardRect.width;
+        const deltaY = Math.abs(keyCenterY - keyboardCenterY) / keyboardRect.height;
+        if (deltaY > deltaX) {
+            if (keyCenterY < keyboardCenterY) topKeys.push(mapping);
+            else bottomKeys.push(mapping);
+        } else {
+            if (keyCenterX < keyboardCenterX) leftKeys.push(mapping);
+            else rightKeys.push(mapping);
+        }
+    });
+
+    leftKeys.sort((a, b) => a.keyElement.getBoundingClientRect().top - b.keyElement.getBoundingClientRect().top);
+    rightKeys.sort((a, b) => a.keyElement.getBoundingClientRect().top - b.keyElement.getBoundingClientRect().top);
+    topKeys.sort((a, b) => a.keyElement.getBoundingClientRect().left - b.keyElement.getBoundingClientRect().left);
+    bottomKeys.sort((a, b) => a.keyElement.getBoundingClientRect().left - b.keyElement.getBoundingClientRect().left);
+
+    const originalWidth = keyboardCanvas.width + (2 * columnWidth) + (2 * padding);
+    const originalHeight = keyboardCanvas.height + (2 * rowHeight) + (2 * padding);
+    
+    const MAX_WIDTH = 1920;
+    const MAX_HEIGHT = 1920;
+    const scaleFactor = Math.min(1, MAX_WIDTH / originalWidth, MAX_HEIGHT / originalHeight);
+
+    finalCanvas.width = originalWidth * scaleFactor;
+    finalCanvas.height = originalHeight * scaleFactor;
+
+    ctx.scale(scaleFactor, scaleFactor);
+
+    if (format !== 'png') {
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fillRect(0, 0, originalWidth, originalHeight);
+    }
+    
+    const keyboardDrawX = (originalWidth - keyboardCanvas.width) / 2;
+    const keyboardDrawY = (originalHeight - keyboardCanvas.height) / 2;
+    ctx.drawImage(keyboardCanvas, keyboardDrawX, keyboardDrawY);
+
+    ctx.font = 'bold 22px monospace';
     ctx.fillStyle = '#000000';
     ctx.strokeStyle = '#000000';
     ctx.lineWidth = 1.5;
 
-    const keyboardRect = keyboardElement.getBoundingClientRect();
-    const leftColumn = mappedKeysArray.slice(0, Math.ceil(mappedKeysArray.length / 2));
-    const rightColumn = mappedKeysArray.slice(Math.ceil(mappedKeysArray.length / 2));
-
-    const drawGuidanceVector = (keyElement, text, textX, textY) => {
+    const drawGuidanceVector = (mapping, textPos) => {
+        const keyElement = mapping.keyElement;
         const keyRect = keyElement.getBoundingClientRect();
-        const keyCenterX = (keyRect.left - keyboardRect.left + keyRect.width / 2) * 2 + columnWidth + padding;
-        const keyCenterY = (keyRect.top - keyboardRect.top + keyRect.height / 2) * 2 + padding;
+        const keyCenterX = keyboardDrawX + (keyRect.left - keyboardRect.left + keyRect.width / 2) * 2;
+        const keyCenterY = keyboardDrawY + (keyRect.top - keyboardRect.top + keyRect.height / 2) * 2;
+        const description = mapping.legendItem.querySelector('.description-input').value || 'Sin descripción';
 
-        ctx.textAlign = textX < keyCenterX ? 'right' : 'left';
-        ctx.fillText(`${keyElement.dataset.keyId}: ${text}`, textX, textY);
+        ctx.textAlign = textPos.align;
+        ctx.textBaseline = 'middle';
         
+        // --- CAMBIO ÚNICO Y CRUCIAL: Añadir el parámetro de anchura máxima (maxWidth) ---
+        // La constante 'columnWidth' ahora impone su disciplina sobre el texto.
+        ctx.fillText(`${keyElement.dataset.keyId}: ${description}`, textPos.x, textPos.y, columnWidth);
+        
+        const textAnchorY = textPos.y;
         ctx.beginPath();
         ctx.moveTo(keyCenterX, keyCenterY);
-        const textAnchorX = textX < keyCenterX ? textX + 5 : textX - 5;
-        ctx.lineTo(textAnchorX, textY - 8);
+        if (textPos.dir === 'horizontal') {
+            const turnPointX = textPos.x < keyCenterX ? textPos.x + 20 : textPos.x - 20;
+            ctx.lineTo(turnPointX, textAnchorY);
+        } else {
+            const turnPointY = textPos.y < keyCenterY ? textPos.y + 20 : textPos.y - 20;
+            ctx.lineTo(keyCenterX, turnPointY);
+            ctx.lineTo(textPos.x, turnPointY);
+        }
         ctx.stroke();
     };
+    
+    let currentY = keyboardDrawY;
+    leftKeys.forEach(mapping => { drawGuidanceVector(mapping, { x: keyboardDrawX - padding, y: currentY, align: 'right', dir: 'horizontal' }); currentY += lineHeight; });
+    
+    currentY = keyboardDrawY;
+    rightKeys.forEach(mapping => { drawGuidanceVector(mapping, { x: keyboardDrawX + keyboardCanvas.width + padding, y: currentY, align: 'left', dir: 'horizontal' }); currentY += lineHeight; });
+    
+    let currentX = keyboardDrawX;
+    topKeys.forEach(mapping => { drawGuidanceVector(mapping, { x: currentX, y: keyboardDrawY - padding, align: 'center', dir: 'vertical' }); currentX += (keyboardCanvas.width / topKeys.length); });
 
-    leftColumn.forEach((mapping, index) => {
-        const description = mapping.legendItem.querySelector('.description-input').value || 'Sin descripción';
-        drawGuidanceVector(mapping.keyElement, description, columnWidth, padding + (index * lineHeight));
-    });
+    currentX = keyboardDrawX;
+    bottomKeys.forEach(mapping => { drawGuidanceVector(mapping, { x: currentX, y: keyboardDrawY + keyboardCanvas.height + padding, align: 'center', dir: 'vertical' }); currentX += (keyboardCanvas.width / bottomKeys.length); });
 
-    rightColumn.forEach((mapping, index) => {
-        const description = mapping.legendItem.querySelector('.description-input').value || 'Sin descripción';
-        drawGuidanceVector(mapping.keyElement, description, finalCanvas.width - columnWidth, padding + (index * lineHeight));
-    });
-
-    // Finalizar y descargar
     if (format === 'pdf') {
         const { jsPDF } = window.jspdf;
         const pdf = new jsPDF({ orientation: 'landscape', unit: 'px', format: [finalCanvas.width, finalCanvas.height] });
         pdf.addImage(finalCanvas.toDataURL('image/png'), 'PNG', 0, 0, finalCanvas.width, finalCanvas.height);
         pdf.save('keyboard-schematic.pdf');
     } else {
-        const link = document.createElement('a');
-        // Para JPG, debemos usar 'image/jpeg'
         const mimeType = format === 'jpeg' ? 'image/jpeg' : `image/${format}`;
+        const link = document.createElement('a');
         link.href = finalCanvas.toDataURL(mimeType);
         link.download = `keyboard-schematic.${format}`;
         link.click();
     }
 }
 
+// --- CÁNTICOS DE ATENCIÓN PARA EXPORTACIÓN ---
 exportPngBtn.addEventListener('click', () => performSchematicExport('png'));
 exportJpgBtn.addEventListener('click', () => performSchematicExport('jpeg'));
 exportPdfBtn.addEventListener('click', () => performSchematicExport('pdf'));
