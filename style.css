@@ -17,7 +17,7 @@ h1, h2 {
 .main-container {
     display: flex;
     flex-wrap: nowrap;
-    justify-content: left;
+    justify-content: center;
     gap: 40px;
     width: 100%;
     max-width: 1200px;
@@ -83,7 +83,6 @@ h1, h2 {
     min-width: 300px;
     max-width: 400px;
     flex-grow: 1;
-
 }
 
 .legend {
@@ -93,6 +92,7 @@ h1, h2 {
 
 .legend-item {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     margin-bottom: 10px;
     background-color: #333;
@@ -105,13 +105,27 @@ h1, h2 {
     font-size: 14px;
 }
 
-.legend-color-picker {
+.tag-selector {
+    background-color: #555;
+    color: #e0e0e0;
+    border: 1px solid #888;
+    border-radius: 4px;
+    padding: 5px;
     margin: 0 10px;
-    border: none;
-    background: none;
-    width: 30px;
-    height: 30px;
+    font-family: monospace;
     cursor: pointer;
+}
+
+.description-input {
+    background-color: #444;
+    color: #e0e0e0;
+    border: 1px solid #888;
+    border-radius: 4px;
+    padding: 6px;
+    margin-top: 5px;
+    width: calc(100% - 12px);
+    font-family: monospace;
+    box-sizing: border-box;
 }
 
 .delete-btn {
@@ -144,32 +158,4 @@ h1, h2 {
 
 .export-controls button:hover {
     background-color: #1a8bc2;
-}
-
-.tag-selector {
-    background-color: #555;
-    color: #e0e0e0;
-    border: 1px solid #888;
-    border-radius: 4px;
-    padding: 5px;
-    margin: 0 10px;
-    font-family: monospace;
-    cursor: pointer;
-}
-
-.description-input {
-    background-color: #444;
-    color: #e0e0e0;
-    border: 1px solid #888;
-    border-radius: 4px;
-    padding: 6px;
-    margin-top: 5px;
-    width: calc(100% - 12px); /* Ocupar todo el ancho del item */
-    font-family: monospace;
-    box-sizing: border-box;
-}
-
-.legend-item {
-    /* Ajuste para permitir el campo de descripción en una nueva línea */
-    flex-wrap: wrap; 
 }

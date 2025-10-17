@@ -152,7 +152,7 @@ legendContainer.addEventListener('click', (event) => {
 });
 
 
-// --- RITO DE EXPORTACIÓN ESQUEMÁTICA (VERSIÓN CON CONTENCIÓN DE TEXTO) ---
+// --- RITO DE EXPORTACIÓN ESQUEMÁTICA (VERSIÓN PURIFICADA FINAL) ---
 async function performSchematicExport(format = 'png') {
     if (mappedKeys.size === 0) {
         alert("No hay teclas mapeadas para generar un diagrama.");
@@ -164,10 +164,11 @@ async function performSchematicExport(format = 'png') {
     const keyboardCanvas = await html2canvas(keyboardElement, { scale: 2, backgroundColor: null });
     keyboardElement.style.backgroundColor = '';
 
-    const padding = 100;
-    const columnWidth = 300;
-    const rowHeight = 100;
+    const padding = 150;
+    const columnWidth = 350;
+    const rowHeight = 150;
     const lineHeight = 45;
+    const textPadding = 10;
     
     const finalCanvas = document.createElement('canvas');
     const ctx = finalCanvas.getContext('2d');
@@ -201,7 +202,7 @@ async function performSchematicExport(format = 'png') {
     const originalHeight = keyboardCanvas.height + (2 * rowHeight) + (2 * padding);
     
     const MAX_WIDTH = 1920;
-    const MAX_HEIGHT = 1920;
+    const MAX_HEIGHT = 1080;
     const scaleFactor = Math.min(1, MAX_WIDTH / originalWidth, MAX_HEIGHT / originalHeight);
 
     finalCanvas.width = originalWidth * scaleFactor;
@@ -219,8 +220,6 @@ async function performSchematicExport(format = 'png') {
     ctx.drawImage(keyboardCanvas, keyboardDrawX, keyboardDrawY);
 
     ctx.font = 'bold 22px monospace';
-    ctx.fillStyle = '#000000';
-    ctx.strokeStyle = '#000000';
     ctx.lineWidth = 1.5;
 
     const drawGuidanceVector = (mapping, textPos) => {
@@ -228,40 +227,95 @@ async function performSchematicExport(format = 'png') {
         const keyRect = keyElement.getBoundingClientRect();
         const keyCenterX = keyboardDrawX + (keyRect.left - keyboardRect.left + keyRect.width / 2) * 2;
         const keyCenterY = keyboardDrawY + (keyRect.top - keyboardRect.top + keyRect.height / 2) * 2;
-        const description = mapping.legendItem.querySelector('.description-input').value || 'Sin descripción';
+        const description = `${keyElement.dataset.keyId}: ${mapping.legendItem.querySelector('.description-input').value || 'Sin descripción'}`;
+        const color = tagColors[mapping.legendItem.querySelector('.tag-selector').value];
 
-        ctx.textAlign = textPos.align;
         ctx.textBaseline = 'middle';
         
-        // --- CAMBIO ÚNICO Y CRUCIAL: Añadir el parámetro de anchura máxima (maxWidth) ---
-        // La constante 'columnWidth' ahora impone su disciplina sobre el texto.
-        ctx.fillText(`${keyElement.dataset.keyId}: ${description}`, textPos.x, textPos.y, columnWidth);
+        const textMetrics = ctx.measureText(description);
+        const textWidth = Math.min(textMetrics.width, columnWidth - textPadding * 2);
+        const textHeight = parseInt(ctx.font, 10);
+        const rectWidth = textWidth + textPadding * 2;
+        const rectHeight = textHeight + textPadding * 2;
+        let rectX, rectY;
+        let connectionPointX, connectionPointY;
+
+        if (textPos.dir === 'horizontal') {
+            rectY = textPos.y - rectHeight / 2;
+            if (textPos.align === 'right') {
+                ctx.textAlign = 'right';
+                rectX = textPos.x - rectWidth;
+                connectionPointX = rectX + rectWidth;
+            } else { // left
+                ctx.textAlign = 'left';
+                rectX = textPos.x;
+                connectionPointX = rectX;
+            }
+            connectionPointY = textPos.y;
+        } else { // vertical
+            ctx.textAlign = 'center';
+            rectX = textPos.x - rectWidth / 2;
+            connectionPointX = textPos.x;
+            if (textPos.y < keyCenterY) { // top
+                rectY = textPos.y - rectHeight;
+                connectionPointY = rectY + rectHeight;
+            } else { // bottom
+                rectY = textPos.y;
+                connectionPointY = rectY;
+            }
+        }
         
-        const textAnchorY = textPos.y;
+        // Dibujar Recuadro
+        ctx.fillStyle = color;
+        ctx.fillRect(rectX, rectY, rectWidth, rectHeight);
+        ctx.strokeStyle = '#000000';
+        ctx.strokeRect(rectX, rectY, rectWidth, rectHeight);
+        
+        // Dibujar Texto
+        ctx.fillStyle = '#000000';
+        ctx.fillText(description, textPos.align === 'right' ? rectX + rectWidth - textPadding : rectX + textPadding, textPos.y, textWidth);
+
+        // Dibujar Vector
+        ctx.strokeStyle = color;
         ctx.beginPath();
         ctx.moveTo(keyCenterX, keyCenterY);
         if (textPos.dir === 'horizontal') {
-            const turnPointX = textPos.x < keyCenterX ? textPos.x + 20 : textPos.x - 20;
-            ctx.lineTo(turnPointX, textAnchorY);
-        } else {
-            const turnPointY = textPos.y < keyCenterY ? textPos.y + 20 : textPos.y - 20;
+            const turnPointX = connectionPointX + (textPos.align === 'right' ? 20 : -20);
+            ctx.lineTo(turnPointX, keyCenterY);
+            ctx.lineTo(turnPointX, connectionPointY);
+            ctx.lineTo(connectionPointX, connectionPointY);
+        } else { // vertical
+            const turnPointY = connectionPointY + (textPos.y < keyCenterY ? 20 : -20);
             ctx.lineTo(keyCenterX, turnPointY);
-            ctx.lineTo(textPos.x, turnPointY);
+            ctx.lineTo(connectionPointX, turnPointY);
+            ctx.lineTo(connectionPointX, connectionPointY);
         }
         ctx.stroke();
     };
     
     let currentY = keyboardDrawY;
-    leftKeys.forEach(mapping => { drawGuidanceVector(mapping, { x: keyboardDrawX - padding, y: currentY, align: 'right', dir: 'horizontal' }); currentY += lineHeight; });
+    leftKeys.forEach(mapping => { 
+        drawGuidanceVector(mapping, { x: keyboardDrawX - padding, y: currentY, align: 'right', dir: 'horizontal' }); 
+        currentY += lineHeight; 
+    });
     
     currentY = keyboardDrawY;
-    rightKeys.forEach(mapping => { drawGuidanceVector(mapping, { x: keyboardDrawX + keyboardCanvas.width + padding, y: currentY, align: 'left', dir: 'horizontal' }); currentY += lineHeight; });
+    rightKeys.forEach(mapping => { 
+        drawGuidanceVector(mapping, { x: keyboardDrawX + keyboardCanvas.width + padding, y: currentY, align: 'left', dir: 'horizontal' }); 
+        currentY += lineHeight; 
+    });
     
     let currentX = keyboardDrawX;
-    topKeys.forEach(mapping => { drawGuidanceVector(mapping, { x: currentX, y: keyboardDrawY - padding, align: 'center', dir: 'vertical' }); currentX += (keyboardCanvas.width / topKeys.length); });
+    topKeys.forEach(mapping => { 
+        drawGuidanceVector(mapping, { x: currentX + (keyboardCanvas.width / topKeys.length / 2), y: keyboardDrawY - padding, align: 'center', dir: 'vertical' }); 
+        currentX += (keyboardCanvas.width / topKeys.length); 
+    });
 
     currentX = keyboardDrawX;
-    bottomKeys.forEach(mapping => { drawGuidanceVector(mapping, { x: currentX, y: keyboardDrawY + keyboardCanvas.height + padding, align: 'center', dir: 'vertical' }); currentX += (keyboardCanvas.width / bottomKeys.length); });
+    bottomKeys.forEach(mapping => { 
+        drawGuidanceVector(mapping, { x: currentX + (keyboardCanvas.width / bottomKeys.length / 2), y: keyboardDrawY + keyboardCanvas.height + padding, align: 'center', dir: 'vertical' }); 
+        currentX += (keyboardCanvas.width / bottomKeys.length); 
+    });
 
     if (format === 'pdf') {
         const { jsPDF } = window.jspdf;
