@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapeador de Controlador PlayStation</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Santuario de Mapeo: Controlador PlayStation</h1>
+    <div class="main-container">
+        <div class="controller-container">
+            <div id="ps-controller" class="controller">
+                <div class="mappable" data-key-id="L1" id="l1">L1</div>
+                <div class="mappable" data-key-id="R1" id="r1">R1</div>
+                <div class="mappable" data-key-id="L2" id="l2">L2</div>
+                <div class="mappable" data-key-id="R2" id="r2">R2</div>
+
+                <div class="mappable" data-key-id="L3" id="ls"></div>
+                <div class="mappable" data-key-id="R3" id="rs"></div>
+
+                <div class="mappable" data-key-id="Create" id="create"></div>
+                <div class="mappable" data-key-id="Options" id="options"></div>
+                <div class="mappable" data-key-id="PS" id="ps-button"></div>
+                <div class="mappable" data-key-id="Touchpad" id="touchpad"></div>
+                
+                <div id="dpad">
+                    <div class="mappable dpad-shape" data-key-id="D-Up" id="d-up"></div>
+                    <div class="mappable dpad-shape" data-key-id="D-Down" id="d-down"></div>
+                    <div class="mappable dpad-shape" data-key-id="D-Left" id="d-left"></div>
+                    <div class="mappable dpad-shape" data-key-id="D-Right" id="d-right"></div>
+                </div>
+
+                <div class="mappable face-button" data-key-id="Triangle" id="triangle"></div>
+                <div class="mappable face-button" data-key-id="Square" id="square"></div>
+                <div class="mappable face-button" data-key-id="Circle" id="circle"></div>
+                <div class="mappable face-button" data-key-id="Cross" id="cross"></div>
+            </div>
+        </div>
+        <div class="legend-container">
+            <h2>Leyenda de Mapeo</h2>
+            <div id="legend" class="legend">
+                </div>
+        </div>
+    </div>
+
+    <div class="export-controls">
+        <button id="export-png-btn">Exportar como PNG</button>
+        <button id="export-jpg-btn">Exportar como JPG</button>
+        <button id="export-pdf-btn">Exportar como PDF</button>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
