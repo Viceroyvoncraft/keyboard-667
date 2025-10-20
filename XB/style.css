@@ -1,0 +1,58 @@
+/* Estilos base reutilizados del teclado */
+body { background-color: #1a1a1a; color: #c5c5c5; font-family: monospace; display: flex; flex-direction: column; align-items: center; padding: 20px; }
+h1, h2 { color: #e0e0e0; font-weight: normal; }
+.main-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 40px; width: 100%; max-width: 1200px; }
+.legend-container { min-width: 300px; max-width: 400px; flex-grow: 1; }
+.legend { max-height: 500px; overflow-y: auto; }
+.legend-item { display: flex; flex-wrap: wrap; align-items: center; margin-bottom: 10px; background-color: #333; padding: 8px; border-radius: 5px; }
+.legend-key-name { flex-grow: 1; font-size: 14px; }
+.tag-selector { background-color: #555; color: #e0e0e0; border: 1px solid #888; border-radius: 4px; padding: 5px; margin: 0 10px; font-family: monospace; cursor: pointer; }
+.description-input { background-color: #444; color: #e0e0e0; border: 1px solid #888; border-radius: 4px; padding: 6px; margin-top: 5px; width: calc(100% - 12px); font-family: monospace; box-sizing: border-box; }
+.delete-btn { background-color: #9e2a2a; color: #fff; border: none; border-radius: 3px; cursor: pointer; padding: 5px 10px; font-family: monospace; }
+.export-controls { margin-top: 25px; display: flex; gap: 15px; }
+.export-controls button { background-color: #0d6b9e; color: #e0e0e0; border: 1px solid #4f9fcf; padding: 10px 15px; font-family: monospace; cursor: pointer; font-size: 14px; border-radius: 5px; transition: background-color 0.2s; }
+.export-controls button:hover { background-color: #1a8bc2; }
+
+/* Estilos específicos del controlador */
+.controller-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 600px;
+}
+.controller {
+    position: relative;
+    width: 500px;
+    height: 350px;
+    background-color: #e0e0e0;
+    border-radius: 30px 30px 150px 150px / 30px 30px 100px 100px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+}
+.mappable {
+    cursor: pointer;
+    transition: background-color 0.2s, box-shadow 0.2s;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.4);
+}
+#lb, #rb { position: absolute; top: 0; width: 100px; height: 30px; background: #ccc; border-top: 1px solid #999; text-align: center; line-height: 30px; color: #333; }
+#lb { left: 40px; border-radius: 10px 0 0 0; }
+#rb { right: 40px; border-radius: 0 10px 0 0; }
+#lt, #rt { position: absolute; top: 0; width: 70px; height: 25px; background: #bbb; z-index: -1; text-align: center; line-height: 25px; color: #333; }
+#lt { left: 40px; border-radius: 10px 0 0 0; }
+#rt { right: 40px; border-radius: 0 10px 0 0; }
+#ls, #rs { position: absolute; width: 80px; height: 80px; background: #444; border: 2px solid #333; border-radius: 50%; }
+#ls { top: 90px; left: 60px; }
+#rs { top: 160px; right: 60px; }
+#view, #menu { position: absolute; top: 110px; width: 25px; height: 25px; background: #333; border-radius: 50%; }
+#view { left: 180px; }
+#menu { right: 180px; }
+#dpad { position: absolute; top: 170px; left: 120px; width: 80px; height: 80px; }
+.dpad-arrow { position: absolute; background: #444; }
+#d-up { top: 0; left: 25px; width: 30px; height: 30px; }
+#d-down { bottom: 0; left: 25px; width: 30px; height: 30px; }
+#d-left { top: 25px; left: 0; width: 30px; height: 30px; }
+#d-right { top: 25px; right: 0; width: 30px; height: 30px; }
+.face-button { position: absolute; width: 40px; height: 40px; border-radius: 50%; color: white; font-size: 20px; text-align: center; line-height: 40px; }
+#y { top: 90px; right: 130px; background: #f0de38; }
+#x { top: 130px; right: 170px; background: #3884f0; }
+#b { top: 130px; right: 90px; background: #f03838; }
+#a { top: 170px; right: 130px; background: #38f058; }

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BG Keymapper</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Keymap Diagram</h1>
+
+    <div class="export-controls">
+	    <button id="export-jpg-btn">Export As JPG</button> 
+        <button id="export-png-btn">Export As PNG</button>
+        <button id="export-pdf-btn">Export As PDF</button>
+    </div>
+
+    <div class="main-container">
+        <div class="keyboard-container">
+            <div id="keyboard" class="keyboard">
+                </div>
+        </div>
+        <div class="legend-container">
+            <h2>Asigned Keys</h2>
+            <div id="legend" class="legend">
+                </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    
+    <script src="script.js"></script>
+</body>
+</html>

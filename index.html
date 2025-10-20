@@ -3,33 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BG Keymapper</title>
+    <title>Key Mapping Tool</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Keymap Diagram</h1>
-
-    <div class="export-controls">
-	    <button id="export-jpg-btn">Exportar como JPG</button> 
-        <button id="export-png-btn">Exportar como PNG</button>
-        <button id="export-pdf-btn">Exportar como PDF</button>
-    </div>
-
-    <div class="main-container">
-        <div class="keyboard-container">
-            <div id="keyboard" class="keyboard">
-                </div>
-        </div>
-        <div class="legend-container">
-            <h2>Asigned Keys</h2>
-            <div id="legend" class="legend">
-                </div>
-        </div>
-    </div>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    
-    <script src="script.js"></script>
+    <header>
+        <h1>Control Mapping Diagramer </h1>
+        <p>select the peripheral to mapping</p>
+    </header>
+    <main class="lobby-container">
+        <a href="keyboard/index.html" class="device-card">
+            <h2>Keyboard</h2>
+            <p>Standar keymaping</p>
+        </a>
+        <a href="XB/index.html" class="device-card">
+            <h2>Xbox Controller</h2>
+            <p>Buttons and Axis Mapping</p>
+        </a>
+        <a href="#" class="device-card disabled">
+            <h2>PlayStation Controller</h2>
+            <p>(Requiere esquemático)</p>
+        </a>
+        <a href="#" class="device-card disabled">
+            <h2>Joy-Con (Single)</h2>
+            <p>(Requiere esquemático)</p>
+        </a>
+        <a href="#" class="device-card disabled">
+            <h2>Joy-Con (Dual)</h2>
+            <p>(Requiere esquemático)</p>
+        </a>
+        <a href="#" class="device-card disabled">
+            <h2>Pro Controller</h2>
+            <p>(Requiere esquemático)</p>
+        </a>
+    </main>
 </body>
 </html>
