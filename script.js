@@ -1,11 +1,11 @@
-// Invocación de los Componentes Estructurales
+// DOM Element Hooks
 const keyboardContainer = document.getElementById('keyboard');
 const legendContainer = document.getElementById('legend');
 const exportPngBtn = document.getElementById('export-png-btn');
 const exportJpgBtn = document.getElementById('export-jpg-btn');
 const exportPdfBtn = document.getElementById('export-pdf-btn');
 
-// Data-Codex de Etiquetas y Colores
+// Data Codex for Tags and Colors
 const tagColors = {
     'Actions': '#FC9C93',
     'Target': '#f1c54cff',
@@ -13,24 +13,28 @@ const tagColors = {
     'Game Menus': '#E4A0DB'
 };
 
-// Data-Codex de la Disposición Sagrada
+// Keyboard Layout Definition
 const keyboardLayout = [
-    // Fila 1: Funciones
+    // Row 1: Function Keys
     [{ text: 'Esc', u: 1 }, { u: 1 }, { text: 'F1', u: 1 }, { text: 'F2', u: 1 }, { text: 'F3', u: 1 }, { text: 'F4', u: 1 }, { u: 0.5 }, { text: 'F5', u: 1 }, { text: 'F6', u: 1 }, { text: 'F7', u: 1 }, { text: 'F8', u: 1 }, { u: 0.5 }, { text: 'F9', u: 1 }, { text: 'F10', u: 1 }, { text: 'F11', u: 1 }, { text: 'F12', u: 1 }, { u: 0.25 }, { text: 'PrtSc', u: 1 }, { text: 'Scroll Lock', u: 1 }, { text: 'Pause Break', u: 1 }],
-    // Fila 2: Números
+    // Row 2: Number Row
     [{ text: '`', sub: '~', u: 1 }, { text: '1', sub: '!', u: 1 }, { text: '2', sub: '@', u: 1 }, { text: '3', sub: '#', u: 1 }, { text: '4', sub: '$', u: 1 }, { text: '5', sub: '%', u: 1 }, { text: '6', sub: '^', u: 1 }, { text: '7', sub: '&', u: 1 }, { text: '8', sub: '*', u: 1 }, { text: '9', sub: '(', u: 1 }, { text: '0', sub: ')', u: 1 }, { text: '-', sub: '_', u: 1 }, { text: '=', sub: '+', u: 1 }, { text: 'Backspace', u: 2 }, { u: 0.25 }, { text: 'Insert', u: 1 }, { text: 'Home', u: 1 }, { text: 'PgUp', u: 1 }],
-    // Fila 3: QWERTY
+    // Row 3: QWERTY
     [{ text: 'Tab', u: 1.5 }, { text: 'Q', u: 1 }, { text: 'W', u: 1 }, { text: 'E', u: 1 }, { text: 'R', u: 1 }, { text: 'T', u: 1 }, { text: 'Y', u: 1 }, { text: 'U', u: 1 }, { text: 'I', u: 1 }, { text: 'O', u: 1 }, { text: 'P', u: 1 }, { text: '[', sub: '{', u: 1 }, { text: ']', sub: '}', u: 1 }, { text: '\\', sub: '|', u: 1.5 }, { u: 0.25 }, { text: 'Delete', u: 1 }, { text: 'End', u: 1 }, { text: 'PgDn', u: 1 }],
-    // Fila 4: ASDF (Home Row)
+    // Row 4: Home Row
     [{ text: 'Caps Lock', u: 1.75 }, { text: 'A', u: 1 }, { text: 'S', u: 1 }, { text: 'D', u: 1 }, { text: 'F', u: 1 }, { text: 'G', u: 1 }, { text: 'H', u: 1 }, { text: 'J', u: 1 }, { text: 'K', u: 1 }, { text: 'L', u: 1 }, { text: ';', sub: ':', u: 1 }, { text: "'", sub: '"', u: 1 }, { text: 'Enter', u: 2.25 },{ u: 3 }],
-    // Fila 5: ZXCV (Bottom Alpha Row)
+    // Row 5: Bottom Alpha Row
     [{ text: 'LShift', u: 2.25 }, { text: 'Z', u: 1 }, { text: 'X', u: 1 }, { text: 'C', u: 1 }, { text: 'V', u: 1 }, { text: 'B', u: 1 }, { text: 'N', u: 1 }, { text: 'M', u: 1 }, { text: ',', sub: '<', u: 1 }, { text: '.', sub: '>', u: 1 }, { text: '/', sub: '?', u: 1 }, { text: 'RShift', u: 2.75 }, { u: 1.35 }, { text: '↑', u: 1 },{ u: 1.25 }],
-    // Fila 6: Modificadores
+    // Row 6: Modifiers
     [{ text: 'LCtrl', u: 1.25 }, { text: 'Win', u: 1.25 }, { text: 'Alt', u: 1.25 }, { text: 'Space', u: 6.25 }, { text: 'Alt Gr', u: 1.25 }, { text: 'Win', u: 1.25 }, { text: 'Menu', u: 1.25 }, { text: 'RCtrl', u: 1.25 }, { u: 0.25 }, { text: '←', u: 1 }, { text: '↓', u: 1 }, { text: '→', u: 1 }]
 ];
 
+// State management for mapped keys
 let mappedKeys = new Map();
 
+/**
+ * Renders the keyboard layout to the DOM based on the keyboardLayout definition.
+ */
 function renderKeyboard() {
     keyboardContainer.innerHTML = '';
     keyboardLayout.forEach(row => {
@@ -58,6 +62,11 @@ function renderKeyboard() {
     });
 }
 
+/**
+ * Adds a selected key to the legend for mapping.
+ * @param {string} keyId - The unique identifier for the key.
+ * @param {HTMLElement} keyElement - The DOM element of the key.
+ */
 function addKeyToLegend(keyId, keyElement) {
     const legendItem = document.createElement('div');
     legendItem.classList.add('legend-item');
@@ -92,7 +101,7 @@ function addKeyToLegend(keyId, keyElement) {
     const descriptionInput = document.createElement('input');
     descriptionInput.type = 'text';
     descriptionInput.classList.add('description-input');
-    descriptionInput.placeholder = 'Añade una descripción...';
+    descriptionInput.placeholder = 'Add a description...';
 
     legendItem.appendChild(topRow);
     legendItem.appendChild(descriptionInput);
@@ -108,6 +117,10 @@ function addKeyToLegend(keyId, keyElement) {
     keyElement.style.boxShadow = 'none';
 }
 
+/**
+ * Removes a key from the legend and unmaps it.
+ * @param {string} keyId - The unique identifier for the key to remove.
+ */
 function removeKeyFromLegend(keyId) {
     const mapping = mappedKeys.get(keyId);
     if (!mapping) return;
@@ -117,6 +130,8 @@ function removeKeyFromLegend(keyId) {
     mapping.legendItem.remove();
     mappedKeys.delete(keyId);
 }
+
+// --- EVENT LISTENERS ---
 
 keyboardContainer.addEventListener('click', (event) => {
     const keyElement = event.target.closest('.key');
@@ -152,10 +167,10 @@ legendContainer.addEventListener('click', (event) => {
 });
 
 
-// --- RITO DE EXPORTACIÓN ESQUEMÁTICA (VERSIÓN FINAL Y ABSOLUTA) ---
+// --- SCHEMATIC EXPORT FUNCTIONALITY (Final Version) ---
 async function performSchematicExport(format = 'png') {
     if (mappedKeys.size === 0) {
-        alert("No hay teclas mapeadas para generar un diagrama.");
+        alert("No keys are mapped to generate a diagram.");
         return;
     }
 
@@ -164,88 +179,165 @@ async function performSchematicExport(format = 'png') {
     const keyboardCanvas = await html2canvas(keyboardElement, { scale: 2, backgroundColor: null });
     keyboardElement.style.backgroundColor = '';
 
-    const padding = 50;
-    const legendSectionWidth = 500;
-    const legendItemHeight = 35; // Aumentado para la nueva fuente
-    const categorySpacing = 40;
+    const padding = 150;
+    const columnWidth = 350;
+    const rowHeight = 150;
+    const lineHeight = 45;
     const textPadding = 10;
+    const itemSpacing = 15;
     
     const finalCanvas = document.createElement('canvas');
     const ctx = finalCanvas.getContext('2d');
 
-    const keyboardDrawX = padding;
-    const keyboardDrawY = padding;
+    const keyboardRect = keyboardElement.getBoundingClientRect();
+    const keyboardCenterX = keyboardRect.left + keyboardRect.width / 2;
+    const keyboardCenterY = keyboardRect.top + keyboardRect.height / 2;
 
-    // Clasificar y medir la altura necesaria de la leyenda
-    let legendHeight = 0;
-    const categorizedKeys = {};
-    for (const tagName in tagColors) {
-        categorizedKeys[tagName] = [];
-    }
+    const leftKeys = [], rightKeys = [], topKeys = [], bottomKeys = [];
     mappedKeys.forEach(mapping => {
-        const tag = mapping.legendItem.querySelector('.tag-selector').value;
-        if (categorizedKeys[tag]) {
-            categorizedKeys[tag].push(mapping);
+        const keyRect = mapping.keyElement.getBoundingClientRect();
+        const keyCenterX = keyRect.left + keyRect.width / 2;
+        const keyCenterY = keyRect.top + keyRect.height / 2;
+        const deltaX = Math.abs(keyCenterX - keyboardCenterX) / keyboardRect.width;
+        const deltaY = Math.abs(keyCenterY - keyboardCenterY) / keyboardRect.height;
+        if (deltaY > deltaX) {
+            if (keyCenterY < keyboardCenterY) topKeys.push(mapping);
+            else bottomKeys.push(mapping);
+        } else {
+            if (keyCenterX < keyboardCenterX) leftKeys.push(mapping);
+            else rightKeys.push(mapping);
         }
     });
 
-    for (const tagName in categorizedKeys) {
-        if (categorizedKeys[tagName].length > 0) {
-            legendHeight += legendItemHeight; // Altura para el título de la categoría
-            legendHeight += legendItemHeight * categorizedKeys[tagName].length; // Altura para los items
-            legendHeight += categorySpacing; // Espacio después de la categoría
-        }
-    }
+    leftKeys.sort((a, b) => a.keyElement.getBoundingClientRect().top - b.keyElement.getBoundingClientRect().top);
+    rightKeys.sort((a, b) => a.keyElement.getBoundingClientRect().top - b.keyElement.getBoundingClientRect().top);
+    topKeys.sort((a, b) => a.keyElement.getBoundingClientRect().left - b.keyElement.getBoundingClientRect().left);
+    bottomKeys.sort((a, b) => a.keyElement.getBoundingClientRect().left - b.keyElement.getBoundingClientRect().left);
 
-    finalCanvas.width = keyboardCanvas.width + legendSectionWidth + (3 * padding);
-    finalCanvas.height = Math.max(keyboardCanvas.height, legendHeight) + (2 * padding);
+    const originalWidth = keyboardCanvas.width + (2 * columnWidth) + (2 * padding);
+    const originalHeight = keyboardCanvas.height + (2 * rowHeight) + (2 * padding);
+    
+    const MAX_WIDTH = 1920;
+    const MAX_HEIGHT = 1080;
+    const scaleFactor = Math.min(1, MAX_WIDTH / originalWidth, MAX_HEIGHT / originalHeight);
+
+    finalCanvas.width = originalWidth * scaleFactor;
+    finalCanvas.height = originalHeight * scaleFactor;
+
+    ctx.scale(scaleFactor, scaleFactor);
 
     if (format !== 'png') {
         ctx.fillStyle = '#FFFFFF';
-        ctx.fillRect(0, 0, finalCanvas.width, finalCanvas.height);
+        ctx.fillRect(0, 0, originalWidth, originalHeight);
     }
     
+    const keyboardDrawX = (originalWidth - keyboardCanvas.width) / 2;
+    const keyboardDrawY = (originalHeight - keyboardCanvas.height) / 2;
     ctx.drawImage(keyboardCanvas, keyboardDrawX, keyboardDrawY);
 
-    const legendDrawX = keyboardDrawX + keyboardCanvas.width + padding;
-    let currentLegendY = padding;
+    ctx.font = 'bold 22px monospace';
+    ctx.lineWidth = 1.5;
 
-    ctx.textBaseline = 'middle';
+    const drawGuidanceVector = (mapping, textPos) => {
+        const keyElement = mapping.keyElement;
+        const keyRect = keyElement.getBoundingClientRect();
+        const keyCenterX = keyboardDrawX + (keyRect.left - keyboardRect.left + keyRect.width / 2) * 2;
+        const keyCenterY = keyboardDrawY + (keyRect.top - keyboardRect.top + keyRect.height / 2) * 2;
+        const description = `${keyElement.dataset.keyId}: ${mapping.legendItem.querySelector('.description-input').value || 'No description'}`;
+        const color = tagColors[mapping.legendItem.querySelector('.tag-selector').value];
 
-    for (const tagName in categorizedKeys) {
-        if (categorizedKeys[tagName].length > 0) {
-            ctx.font = 'bold 22px monospace';
-            const categoryColor = tagColors[tagName];
-            
-            // Dibujar recuadro de título de categoría
-            ctx.fillStyle = categoryColor;
-            ctx.fillRect(legendDrawX, currentLegendY, legendSectionWidth - padding, legendItemHeight);
-            ctx.strokeStyle = '#000000';
-            ctx.strokeRect(legendDrawX, currentLegendY, legendSectionWidth - padding, legendItemHeight);
-            
-            // Dibujar texto de título
-            ctx.fillStyle = '#000000';
-            ctx.fillText(tagName, legendDrawX + textPadding, currentLegendY + legendItemHeight / 2, legendSectionWidth - padding - textPadding * 2);
-            currentLegendY += legendItemHeight + (textPadding / 2);
+        ctx.textBaseline = 'middle';
+        
+        const textMetrics = ctx.measureText(description);
+        const textWidth = Math.min(textMetrics.width, (textPos.dir === 'horizontal' ? columnWidth : (keyboardCanvas.width / (topKeys.length || 1))) - textPadding * 2);
+        const textHeight = parseInt(ctx.font, 10);
+        const rectWidth = textWidth + textPadding * 2;
+        const rectHeight = textHeight + textPadding * 2;
+        let rectX, rectY;
+        let connectionPointX, connectionPointY;
 
-            // --- CAMBIO FINAL: GLIFOS DE LEYENDA AUMENTADOS ---
-            ctx.font = 'bold 20px monospace'; // Fuente más grande y en negrita
-            categorizedKeys[tagName].forEach(mapping => {
-                const keyId = mapping.keyElement.dataset.keyId;
-                const description = mapping.legendItem.querySelector('.description-input').value || 'Sin descripción';
-                const displayText = `${keyId}: ${description}`;
-                
-                ctx.fillStyle = '#000000';
-                ctx.fillText(displayText, legendDrawX + textPadding, currentLegendY + legendItemHeight / 2, legendSectionWidth - padding - textPadding * 2);
-                currentLegendY += legendItemHeight;
-            });
-            currentLegendY += categorySpacing;
+        ctx.textAlign = textPos.align;
+        
+        if (textPos.dir === 'horizontal') {
+            rectY = textPos.y - rectHeight / 2;
+            if (textPos.align === 'right') {
+                rectX = textPos.x - rectWidth;
+                connectionPointX = rectX + rectWidth;
+            } else { // left
+                rectX = textPos.x;
+                connectionPointX = rectX;
+            }
+            connectionPointY = textPos.y;
+        } else { // vertical
+            rectX = textPos.x - rectWidth / 2;
+            connectionPointX = textPos.x;
+            if (textPos.y < keyCenterY) { // top
+                rectY = textPos.y;
+                connectionPointY = rectY + rectHeight;
+            } else { // bottom
+                rectY = textPos.y - rectHeight;
+                connectionPointY = rectY;
+            }
         }
-    }
+        
+        // Draw Box
+        ctx.fillStyle = color;
+        ctx.fillRect(rectX, rectY, rectWidth, rectHeight);
+        ctx.strokeStyle = '#000000';
+        ctx.strokeRect(rectX, rectY, rectWidth, rectHeight);
+        
+        // Draw Text
+        ctx.fillStyle = '#000000';
+        const textDrawX = textPos.align === 'center' ? textPos.x : (textPos.align === 'right' ? rectX + rectWidth - textPadding : rectX + textPadding);
+        ctx.fillText(description, textDrawX, textPos.y, textWidth);
+
+        // Draw Vector
+        ctx.strokeStyle = color;
+        ctx.beginPath();
+        ctx.moveTo(keyCenterX, keyCenterY);
+        if (textPos.dir === 'horizontal') {
+            const turnPointX = connectionPointX + (textPos.align === 'right' ? 20 : -20);
+            ctx.lineTo(turnPointX, keyCenterY);
+            ctx.lineTo(turnPointX, connectionPointY);
+            ctx.lineTo(connectionPointX, connectionPointY);
+        } else { // vertical
+            const turnPointY = connectionPointY + (textPos.y < keyCenterY ? -20 : 20);
+            ctx.lineTo(keyCenterX, turnPointY);
+            ctx.lineTo(connectionPointX, turnPointY);
+            ctx.lineTo(connectionPointX, connectionPointY);
+        }
+        ctx.stroke();
+        
+        return { width: rectWidth, height: rectHeight };
+    };
     
-    const { jsPDF } = window.jspdf;
+    let currentY = keyboardDrawY;
+    leftKeys.forEach(mapping => { 
+        drawGuidanceVector(mapping, { x: keyboardDrawX - padding, y: currentY, align: 'right', dir: 'horizontal' }); 
+        currentY += lineHeight; 
+    });
+    
+    currentY = keyboardDrawY;
+    rightKeys.forEach(mapping => { 
+        drawGuidanceVector(mapping, { x: keyboardDrawX + keyboardCanvas.width + padding, y: currentY, align: 'left', dir: 'horizontal' }); 
+        currentY += lineHeight; 
+    });
+    
+    // Dynamic spacing logic
+    let currentX = keyboardDrawX;
+    topKeys.forEach(mapping => {
+        const rectInfo = drawGuidanceVector(mapping, { x: currentX, y: keyboardDrawY - padding, align: 'left', dir: 'vertical' }); 
+        currentX += rectInfo.width + itemSpacing;
+    });
+
+    currentX = keyboardDrawY;
+    bottomKeys.forEach(mapping => { 
+        const rectInfo = drawGuidanceVector(mapping, { x: currentX, y: keyboardDrawY + keyboardCanvas.height + padding, align: 'left', dir: 'vertical' }); 
+        currentX += rectInfo.width + itemSpacing;
+    });
 
     if (format === 'pdf') {
+        const { jsPDF } = window.jspdf;
         const pdf = new jsPDF({ orientation: 'landscape', unit: 'px', format: [finalCanvas.width, finalCanvas.height] });
         pdf.addImage(finalCanvas.toDataURL('image/png'), 'PNG', 0, 0, finalCanvas.width, finalCanvas.height);
         pdf.save('keyboard-schematic.pdf');
@@ -258,10 +350,10 @@ async function performSchematicExport(format = 'png') {
     }
 }
 
-// --- CÁNTICOS DE ATENCIÓN PARA EXPORTACIÓN ---
+// --- EXPORT BUTTON EVENT LISTENERS ---
 exportPngBtn.addEventListener('click', () => performSchematicExport('png'));
 exportJpgBtn.addEventListener('click', () => performSchematicExport('jpeg'));
 exportPdfBtn.addEventListener('click', () => performSchematicExport('pdf'));
 
-// --- RITO DE INICIACIÓN ---
+// --- INITIALIZATION ---
 renderKeyboard();
