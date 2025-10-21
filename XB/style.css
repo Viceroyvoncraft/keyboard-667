@@ -13,169 +13,86 @@ h1, h2 { color: #e0e0e0; font-weight: normal; }
 .export-controls button { background-color: #0d6b9e; color: #e0e0e0; border: 1px solid #4f9fcf; padding: 10px 15px; font-family: monospace; cursor: pointer; font-size: 14px; border-radius: 5px; transition: background-color 0.2s; }
 .export-controls button:hover { background-color: #1a8bc2; }
 
-/* --- RE-CONSECRACIÓN DE LOS ESTILOS DEL CONTROLADOR XBOX --- */
+/* --- ESTILOS CON IMAGEN DE FONDO --- */
 .controller-container {
     display: flex;
     justify-content: center;
     align-items: center;
-    min-width: 600px;
+    min-width: 700px; /* Ajustar según tamaño de imagen */
 }
 .controller {
     position: relative;
-    width: 620px; /* Ancho ajustado para parecerse más */
-    height: 400px; /* Altura ajustada */
-    background-color: #F8F8F8; /* Color base casi blanco */
-    border-radius: 30px; /* Bordes más redondeados en general */
-    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-    border: 1px solid #E0E0E0; /* Borde sutil */
-    padding: 20px; /* Padding para los elementos internos */
-    box-sizing: border-box;
-    display: grid; /* Usaremos grid para posicionamiento principal */
-    grid-template-columns: repeat(30, 1fr); /* Grilla más fina */
-    grid-template-rows: repeat(20, 1fr);
-    overflow: hidden; /* Para que los gatillos no sobresalgan */
-}
-
-/* Base para los mapeables */
-.mappable {
-    cursor: pointer;
-    transition: background-color 0.2s, box-shadow 0.2s, transform 0.1s;
-    box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: #444;
-    font-size: 14px;
-    font-weight: bold;
-    z-index: 10; /* Asegurar que estén por encima del fondo */
-    background-color: #EFEFEF; /* Color por defecto */
-    border: 1px solid #CCC;
-    border-radius: 5px;
-}
-.mappable:hover {
-    transform: scale(1.05);
-}
-
-/* -- BUMPERS (LB/RB) -- */
-#lb, #rb {
-    grid-column: span 6; /* Ocupa 6 columnas de la grilla */
-    grid-row: 1 / span 1; /* Fila superior */
-    height: 30px;
-    background: #CCC;
-    border: 1px solid #AAA;
-    box-shadow: inset 0 1px 3px rgba(0,0,0,0.4);
-    font-size: 12px;
-}
-#lb { grid-column: 4 / span 6; border-radius: 8px 0 0 0; }
-#rb { grid-column: 21 / span 6; border-radius: 0 8px 0 0; }
-
-/* -- TRIGGERS (LT/RT) -- */
-#lt, #rt {
-    grid-column: span 6;
-    grid-row: 1 / span 2; /* Ligeramente más abajo que los bumpers */
-    height: 45px;
-    background: #BBB;
-    z-index: 5; /* Ligeramente debajo de los bumpers visualmente */
-    border: 1px solid #999;
-    box-shadow: inset 0 2px 5px rgba(0,0,0,0.5);
-    font-size: 12px;
-}
-#lt { grid-column: 4 / span 6; border-radius: 10px 0 0 15px; }
-#rt { grid-column: 21 / span 6; border-radius: 0 10px 15px 0; }
-
-/* -- STICKS (LS/RS) -- */
-#ls, #rs {
-    width: 85px;
-    height: 85px;
-    background: #333;
-    border: 2px solid #222;
-    border-radius: 50%;
-    box-shadow: 0 0 10px rgba(0,0,0,0.5) inset;
-    position: relative; /* Para el círculo interior */
-}
-#ls::after, #rs::after { /* Círculo interior del stick */
-    content: '';
-    position: absolute;
-    top: 15px; left: 15px;
-    width: 55px; height: 55px;
-    background: #444;
-    border-radius: 50%;
-    box-shadow: inset 0 1px 3px rgba(0,0,0,0.3);
-}
-#ls { grid-column: 5 / span 5; grid-row: 5 / span 5; } /* Posición ajustada */
-#rs { grid-column: 20 / span 5; grid-row: 10 / span 5; } /* Posición ajustada */
-
-/* -- BOTONES CENTRALES -- */
-#xbox-button {
-    grid-column: 14 / span 3;
-    grid-row: 3 / span 2;
-    width: 50px; height: 50px;
-    background-color: #1a1a1a;
-    border-radius: 50%;
-    border: 2px solid #444;
-    box-shadow: inset 0 0 5px rgba(0,0,0,0.5);
-    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23757575"><path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm-4.717 18.008l-2.735-3.008 3.013-4.724 2.457 2.658-2.735 5.074zm6.495 2.193l-3.666-6.862-2.88 3.12 6.546 3.742zm4.184-.711l-3.264-3.763 3.037-5.021 2.92 3.016-2.693 5.768zm-4.322-10.283l-2.072 2.155-1.928-3.327 3.266-.358.734 1.53zm-5.647-3.414l-2.775-1.229 3.493-1.631 3.238 1.436-3.956 1.424zm9.328 1.684l-3.238-1.436 3.493 1.631-2.775 1.229z" opacity=".8"/></svg>');
-    background-size: 80%;
+    /* AJUSTAR width y height para que coincidan con las dimensiones de controller-diagram.png */
+    width: 650px; 
+    height: 450px; 
+    background-image: url('controller-diagram.png');
+    background-size: contain; /* O 'cover', o un tamaño específico */
     background-repeat: no-repeat;
     background-position: center;
-}
-#view, #menu {
-    width: 30px; height: 20px;
-    background: #444;
-    border-radius: 5px;
-    box-shadow: inset 0 1px 3px rgba(0,0,0,0.3);
-}
-#view { grid-column: 11 / span 3; grid-row: 7 / span 1; }
-#menu { grid-column: 17 / span 3; grid-row: 7 / span 1; }
-#share {
-    grid-column: 14 / span 3;
-    grid-row: 10 / span 1;
-    width: 30px; height: 20px;
-    background: #444;
-    border-radius: 5px;
-    box-shadow: inset 0 1px 3px rgba(0,0,0,0.3);
-}
-
-/* -- D-PAD -- */
-#dpad {
-    grid-column: 6 / span 6;
-    grid-row: 9 / span 6;
-    position: relative;
-    background: #444; /* Color base del D-pad */
-    border-radius: 5px; /* Bordes ligeramente redondeados */
-    box-shadow: inset 0 1px 3px rgba(0,0,0,0.5);
-    display: grid; /* Usamos grid interno para las flechas */
-    grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: repeat(3, 1fr);
-    width: 90px; /* Ancho fijo */
-    height: 90px; /* Altura fija */
-}
-/* Las flechas del D-pad ahora son divs mapeables sobre el fondo */
-.dpad-arrow {
-    background: transparent; /* Las flechas son transparentes, solo el fondo del dpad se colorea */
-    box-shadow: none; /* No tienen sombra propia */
+    /* Quitar estilos previos de forma */
+    background-color: transparent; 
+    border-radius: 0;
+    box-shadow: none;
     border: none;
-    font-size: 0; /* Ocultar texto si lo tuviera */
+    padding: 0;
 }
-#d-up { grid-column: 2; grid-row: 1; border-radius: 5px 5px 0 0; }
-#d-down { grid-column: 2; grid-row: 3; border-radius: 0 0 5px 5px; }
-#d-left { grid-column: 1; grid-row: 2; border-radius: 5px 0 0 5px; }
-#d-right { grid-column: 3; grid-row: 2; border-radius: 0 5px 5px 0; }
 
-
-/* -- BOTONES FRONTALES (A, B, X, Y) -- */
-.face-button {
-    width: 45px; height: 45px;
-    border-radius: 50%;
-    color: white;
-    font-size: 20px;
-    font-weight: bold;
-    text-align: center;
-    line-height: 45px;
-    box-shadow: inset 0 2px 4px rgba(0,0,0,0.4);
-    border: 1px solid #AAA;
+.mappable {
+    position: absolute;
+    background-color: rgba(255, 0, 0, 0.0); /* Inicialmente transparente, 0.5 de alfa para debug si es necesario */
+    border-radius: 5px; /* Por defecto */
+    cursor: pointer;
+    transition: background-color 0.2s;
+    /* Quitar estilos previos */
+    box-shadow: none;
+    display: block; /* Quitar flex */
+    color: transparent; /* Ocultar texto LB/RB */
+    font-size: 0;
+    border: none;
 }
-#y { grid-column: 22 / span 3; grid-row: 4 / span 2; background: #f0de38; }
-#x { grid-column: 19 / span 3; grid-row: 6 / span 2; background: #3884f0; }
-#b { grid-column: 25 / span 3; grid-row: 6 / span 2; background: #f03838; }
-#a { grid-column: 22 / span 3; grid-row: 8 / span 2; background: #38f058; }
+.mappable:hover {
+     /* Efecto sutil al pasar el ratón, opcional */
+    background-color: rgba(0, 255, 0, 0.2);
+    transform: none; /* Quitar el scale */
+}
+
+/* --- POSICIONAMIENTO PRECISO (¡AJUSTAR ESTOS VALORES!) --- */
+/* Los valores top, left, width, height deben ajustarse para que cada div */
+/* cubra exactamente el botón correspondiente en la imagen controller-diagram.png */
+
+/* Bumpers */
+#lb { top: 35px; left: 95px; width: 90px; height: 35px; border-radius: 10px 10px 0 0; }
+#rb { top: 35px; right: 95px; width: 90px; height: 35px; border-radius: 10px 10px 0 0; }
+/* Triggers (área aproximada) */
+#lt { top: 0px; left: 100px; width: 80px; height: 40px; border-radius: 10px 0 0 0; }
+#rt { top: 0px; right: 100px; width: 80px; height: 40px; border-radius: 0 10px 0 0; }
+/* Sticks */
+#ls { top: 105px; left: 100px; width: 85px; height: 85px; border-radius: 50%; }
+#rs { top: 225px; right: 100px; width: 85px; height: 85px; border-radius: 50%; }
+/* Center Buttons */
+#xbox-button { top: 58px; left: 285px; width: 40px; height: 40px; border-radius: 50%; }
+#view { top: 168px; left: 215px; width: 30px; height: 20px; border-radius: 10px; transform: rotate(-15deg);}
+#menu { top: 168px; right: 215px; width: 30px; height: 20px; border-radius: 10px; transform: rotate(15deg); }
+#share { top: 218px; left: 292px; width: 25px; height: 25px; border-radius: 5px; }
+/* D-Pad Arrows */
+#dpad { /* Contenedor invisible para agrupar */
+    position: absolute; 
+    top: 220px; 
+    left: 175px; 
+    width: 80px; 
+    height: 80px;
+    background: transparent;
+    border-radius: 0;
+    box-shadow: none;
+}
+.dpad-arrow { background: transparent; box-shadow: none; border: none; }
+#d-up { position: absolute; top: 0; left: 25px; width: 30px; height: 30px; }
+#d-down { position: absolute; bottom: 0; left: 25px; width: 30px; height: 30px; }
+#d-left { position: absolute; top: 25px; left: 0; width: 30px; height: 30px; }
+#d-right { position: absolute; top: 25px; right: 0; width: 30px; height: 30px; }
+/* Face Buttons */
+.face-button { border-radius: 50%; width: 45px; height: 45px; }
+#y { top: 105px; right: 155px; }
+#x { top: 150px; right: 200px; }
+#b { top: 150px; right: 110px; }
+#a { top: 195px; right: 155px; }
