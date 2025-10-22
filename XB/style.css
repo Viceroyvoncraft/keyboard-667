@@ -61,19 +61,19 @@ h1, h2 { color: #e0e0e0; font-weight: normal; }
 /* cubra exactamente el botón correspondiente en la imagen controller-diagram.png */
 
 /* Bumpers */
-#lb { top: 35px; left: 95px; width: 90px; height: 35px; border-radius: 10px 10px 0 0; }
-#rb { top: 35px; right: 95px; width: 90px; height: 35px; border-radius: 10px 10px 0 0; }
+#lb { top: 143px; left: 590px; width: 43px; height: 10px; border-radius: 49% 229% 0 0; rotate: -10deg; }
+#rb { top: 143px; right: 602px; width: 43px; height: 10px; border-radius: 256% 88% 0 0; rotate: 10deg; }
 /* Triggers (área aproximada) */
-#lt { top: 0px; left: 100px; width: 80px; height: 40px; border-radius: 10px 0 0 0; }
-#rt { top: 0px; right: 100px; width: 80px; height: 40px; border-radius: 0 10px 0 0; }
+#lt { top: 152px; left: 566px; width: 26px; height: 9px; border-radius: 92% 37% 0% 0; rotate: -27deg; }
+#rt { top: 153px; right: 578px; width: 26px; height: 9px; border-radius: 0% 99% 0% 24%; rotate: 27deg; }
 /* Sticks */
-#ls { top: 187px; left: 569px; width: 56px; height: 54px; border-radius: 50%; }
-#rs { top: 244px; right: 629px; width: 55px; height: 55px; border-radius: 50%; }
+#ls { top: 193px; left: 576px; width: 42px; height: 42px; border-radius: 50%; }
+#rs { top: 251px; right: 635px; width: 42px; height: 42px; border-radius: 50%; }
 /* Center Buttons */
 #view { top: 205px; left: 658px; width: 17px; height: 17px; border-radius: 10px;}
 #menu { top: 205px; right: 670px; width: 17px; height: 17px; border-radius: 10px; }
 /* D-Pad Arrows */
-#dpad { /* Contenedor invisible para agrupar */
+.dpad { /* Contenedor invisible para agrupar */
     position:absolute; 
     top: 237px; 
     left: 604px; 
@@ -89,7 +89,7 @@ h1, h2 { color: #e0e0e0; font-weight: normal; }
 #d-left { position: absolute; top: 30px; left: 10px; width: 20px; height: 20px; }
 #d-right { position: absolute; top: 30px; right: 10px; width: 20px; height: 20px; }
 /* Face Buttons */
-#fbuttons {
+.fbuttons {
     position: absolute;
     top: 44px;
     right: 431px;
