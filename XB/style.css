@@ -23,7 +23,7 @@ h1, h2 { color: #e0e0e0; font-weight: normal; }
 .controller {
     position: relative;
     /* AJUSTAR width y height para que coincidan con las dimensiones de controller-diagram.png */
-    width: 650px; 
+    width: 2400px; 
     height: 450px; 
     background-image: url('controller-diagram.png');
     background-size: contain; /* O 'cover', o un tamaño específico */
@@ -67,18 +67,16 @@ h1, h2 { color: #e0e0e0; font-weight: normal; }
 #lt { top: 0px; left: 100px; width: 80px; height: 40px; border-radius: 10px 0 0 0; }
 #rt { top: 0px; right: 100px; width: 80px; height: 40px; border-radius: 0 10px 0 0; }
 /* Sticks */
-#ls { top: 105px; left: 100px; width: 85px; height: 85px; border-radius: 50%; }
-#rs { top: 225px; right: 100px; width: 85px; height: 85px; border-radius: 50%; }
+#ls { top: 187px; left: 569px; width: 56px; height: 54px; border-radius: 50%; }
+#rs { top: 244px; right: 629px; width: 55px; height: 55px; border-radius: 50%; }
 /* Center Buttons */
-#xbox-button { top: 58px; left: 285px; width: 40px; height: 40px; border-radius: 50%; }
-#view { top: 168px; left: 215px; width: 30px; height: 20px; border-radius: 10px; transform: rotate(-15deg);}
-#menu { top: 168px; right: 215px; width: 30px; height: 20px; border-radius: 10px; transform: rotate(15deg); }
-#share { top: 218px; left: 292px; width: 25px; height: 25px; border-radius: 5px; }
+#view { top: 205px; left: 658px; width: 17px; height: 17px; border-radius: 10px;}
+#menu { top: 205px; right: 670px; width: 17px; height: 17px; border-radius: 10px; }
 /* D-Pad Arrows */
 #dpad { /* Contenedor invisible para agrupar */
-    position: absolute; 
-    top: 220px; 
-    left: 175px; 
+    position:absolute; 
+    top: 237px; 
+    left: 604px; 
     width: 80px; 
     height: 80px;
     background: transparent;
@@ -86,13 +84,18 @@ h1, h2 { color: #e0e0e0; font-weight: normal; }
     box-shadow: none;
 }
 .dpad-arrow { background: transparent; box-shadow: none; border: none; }
-#d-up { position: absolute; top: 0; left: 25px; width: 30px; height: 30px; }
-#d-down { position: absolute; bottom: 0; left: 25px; width: 30px; height: 30px; }
-#d-left { position: absolute; top: 25px; left: 0; width: 30px; height: 30px; }
-#d-right { position: absolute; top: 25px; right: 0; width: 30px; height: 30px; }
+#d-up { position: absolute; top: 10px; left: 30px; width: 20px; height: 20px; }
+#d-down { position: absolute; bottom: 10px; left: 30px; width: 20px; height: 20px; }
+#d-left { position: absolute; top: 30px; left: 10px; width: 20px; height: 20px; }
+#d-right { position: absolute; top: 30px; right: 10px; width: 20px; height: 20px; }
 /* Face Buttons */
-.face-button { border-radius: 50%; width: 45px; height: 45px; }
-#y { top: 105px; right: 155px; }
-#x { top: 150px; right: 200px; }
-#b { top: 150px; right: 110px; }
-#a { top: 195px; right: 155px; }
+#fbuttons {
+    position: absolute;
+    top: 44px;
+    right: 431px;
+}
+.face-button { border-radius: 50%; width: 26px; height: 26px; }
+#y { top: 133px; right: 165px; }
+#x { top: 157px; right: 190px; }
+#b { top: 159px; right: 140px; }
+#a { top: 183px; right: 165px; }
