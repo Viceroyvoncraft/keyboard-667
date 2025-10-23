@@ -24,7 +24,7 @@ h1, h2 { color: #e0e0e0; font-weight: normal; }
     position: relative;
     /* AJUSTAR width y height para que coincidan con las dimensiones de controller-diagram.png */
     width: 2400px; 
-    height: 450px; 
+    height: 720px; 
     background-image: url('controller-diagram.png');
     background-size: contain; /* O 'cover', o un tamaño específico */
     background-repeat: no-repeat;
@@ -39,7 +39,7 @@ h1, h2 { color: #e0e0e0; font-weight: normal; }
 
 .mappable {
     position: absolute;
-    background-color: rgba(255, 0, 0, 0.0); /* Inicialmente transparente, 0.5 de alfa para debug si es necesario */
+    background-color: rgba(255, 0, 0, 0.5); /* Inicialmente transparente, 0.5 de alfa para debug si es necesario */
     border-radius: 5px; /* Por defecto */
     cursor: pointer;
     transition: background-color 0.2s;
@@ -54,6 +54,7 @@ h1, h2 { color: #e0e0e0; font-weight: normal; }
      /* Efecto sutil al pasar el ratón, opcional */
     background-color: rgba(0, 255, 0, 0.2);
     transform: none; /* Quitar el scale */
+    z-index: 3;
 }
 
 /* --- POSICIONAMIENTO PRECISO (¡AJUSTAR ESTOS VALORES!) --- */
@@ -67,13 +68,17 @@ h1, h2 { color: #e0e0e0; font-weight: normal; }
 #lt { top: 152px; left: 566px; width: 26px; height: 9px; border-radius: 92% 37% 0% 0; rotate: -27deg; }
 #rt { top: 153px; right: 578px; width: 26px; height: 9px; border-radius: 0% 99% 0% 24%; rotate: 27deg; }
 /* Sticks */
-#ls { top: 193px; left: 576px; width: 42px; height: 42px; border-radius: 50%; }
-#rs { top: 251px; right: 635px; width: 42px; height: 42px; border-radius: 50%; }
+#LS { top: 296px; left: 432px; width: 69px; height: 63px; border-radius: 50%; border: solid transparent 12px; }
+#LS:hover { border: solid rgba(0, 255, 0, 0.2) 12px; }
+#RS { top: 420px; right: 540px; width: 69px; height: 62px; border-radius: 50%; border: solid transparent 12px; }
+#RS:hover { border: solid rgba(0, 255, 0, 0.2) 16px; width: 61px; height: 54px; }
+#LSB { top: 315px; left: 446px; width: 63px; height: 58px; border-radius: 50%; z-index: 3; }
+#RSB { top: 439px; right: 554px; width: 64px; height: 58px; border-radius: 50%; z-index: 3; }
 /* Center Buttons */
 #view { top: 205px; left: 658px; width: 17px; height: 17px; border-radius: 10px;}
 #menu { top: 205px; right: 670px; width: 17px; height: 17px; border-radius: 10px; }
 /* D-Pad Arrows */
-.dpad { /* Contenedor invisible para agrupar */
+#dpad { /* Contenedor invisible para agrupar */
     position:absolute; 
     top: 237px; 
     left: 604px; 
@@ -89,7 +94,7 @@ h1, h2 { color: #e0e0e0; font-weight: normal; }
 #d-left { position: absolute; top: 30px; left: 10px; width: 20px; height: 20px; }
 #d-right { position: absolute; top: 30px; right: 10px; width: 20px; height: 20px; }
 /* Face Buttons */
-.fbuttons {
+#fbuttons {
     position: absolute;
     top: 44px;
     right: 431px;
