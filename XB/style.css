@@ -79,18 +79,18 @@ h1, h2 { color: #e0e0e0; font-weight: normal; }
 #menu { top: 205px; right: 670px; width: 17px; height: 17px; border-radius: 10px; }
 /* D-Pad Arrows */
 #dpad { /* Contenedor invisible para agrupar */
-    position:absolute; 
-    top: 237px; 
-    left: 604px; 
-    width: 80px; 
-    height: 80px;
+position: relative;
+    top: 410px;
+    left: 451px;
+    width: 187px;
+    height: 163px;
     background: transparent;
     border-radius: 0;
     box-shadow: none;
 }
 .dpad-arrow { background: transparent; box-shadow: none; border: none; }
-#d-up { position: absolute; top: 10px; left: 30px; width: 20px; height: 20px; }
-#d-down { position: absolute; bottom: 10px; left: 30px; width: 20px; height: 20px; }
+#d-up { position: relative; top: 12px; left: 62px; width: 61px; height: 42px; border-radius: 26% 19% 0% 0%; }
+#d-down { position: relative; bottom: -67px; left: 65px; width: 59px; height: 51px; border-radius: 0% 0% 20% 25%; }
 #d-left { position: absolute; top: 30px; left: 10px; width: 20px; height: 20px; }
 #d-right { position: absolute; top: 30px; right: 10px; width: 20px; height: 20px; }
 /* Face Buttons */
