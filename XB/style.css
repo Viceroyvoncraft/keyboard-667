@@ -54,7 +54,7 @@ h1, h2 { color: #e0e0e0; font-weight: normal; }
      /* Efecto sutil al pasar el ratón, opcional */
     background-color: rgba(0, 255, 0, 0.2);
     transform: none; /* Quitar el scale */
-    z-index: 3;
+    z-index: 2;
 }
 
 /* --- POSICIONAMIENTO PRECISO (¡AJUSTAR ESTOS VALORES!) --- */
@@ -68,14 +68,14 @@ h1, h2 { color: #e0e0e0; font-weight: normal; }
 #lt { top: 152px; left: 566px; width: 26px; height: 9px; border-radius: 92% 37% 0% 0; rotate: -27deg; }
 #rt { top: 153px; right: 578px; width: 26px; height: 9px; border-radius: 0% 99% 0% 24%; rotate: 27deg; }
 /* Sticks */
-#LS { top: 296px; left: 432px; width: 69px; height: 63px; border-radius: 50%; border: solid transparent 12px; }
-#LS:hover { border: solid rgba(0, 255, 0, 0.2) 12px; }
-#RS { top: 420px; right: 540px; width: 69px; height: 62px; border-radius: 50%; border: solid transparent 12px; }
-#RS:hover { border: solid rgba(0, 255, 0, 0.2) 16px; width: 61px; height: 54px; }
+#LS { top: 270px; left: 324px; width: 108px; height: 99px; border-radius: 50%; border: solid transparent 12px; }
+#LS:hover { border: solid rgba(0, 255, 0, 0.2) 25px; height: 73px; width: 82px; }
+#RS { top: 442px; right: 476px; width: 108px; height: 100px; border-radius: 50%; border: solid transparent 12px; }
+#RS:hover { border: solid rgba(0, 255, 0, 0.2) 23px; width: 85px; height: 74px; right: 476px; top: 444px; }
 #LSB { top: 315px; left: 446px; width: 63px; height: 58px; border-radius: 50%; z-index: 3; }
-#RSB { top: 439px; right: 554px; width: 64px; height: 58px; border-radius: 50%; z-index: 3; }
+#RSB { top: 470px; right: 495px; width: 91px; height: 80px; border-radius: 50%; z-index: 3; }
 /* Center Buttons */
-#view { top: 205px; left: 658px; width: 17px; height: 17px; border-radius: 10px;}
+#view { top: 289px; left: 585px; width: 57px; height: 52px; border-radius: 50px; }
 #menu { top: 205px; right: 670px; width: 17px; height: 17px; border-radius: 10px; }
 /* D-Pad Arrows */
 #dpad { /* Contenedor invisible para agrupar */
@@ -91,16 +91,18 @@ position: relative;
 .dpad-arrow { background: transparent; box-shadow: none; border: none; }
 #d-up { position: relative; top: 12px; left: 62px; width: 61px; height: 42px; border-radius: 26% 19% 0% 0%; }
 #d-down { position: relative; bottom: -67px; left: 65px; width: 59px; height: 51px; border-radius: 0% 0% 20% 25%; }
-#d-left { position: absolute; top: 30px; left: 10px; width: 20px; height: 20px; }
-#d-right { position: absolute; top: 30px; right: 10px; width: 20px; height: 20px; }
+#d-left { position: relative; top: -32px; left: 7px; width: 58px; height: 47px; transform: skew(-1deg, -6deg); border-radius: 13% 0% 0% 27%; }
+#d-right { position: relative; top: -79px; right: -123px; width: 58px; height: 49px; transform: skew(-3deg, 7deg); border-radius: 0% 19% 27% 0%; }
+
 /* Face Buttons */
 #fbuttons {
-    position: absolute;
-    top: 44px;
-    right: 431px;
+    position: relative;
+    top: -19px;
+    right: 211px;
 }
+
 .face-button { border-radius: 50%; width: 26px; height: 26px; }
-#y { top: 133px; right: 165px; }
+#y { top: 50px; right: 138px; }
 #x { top: 157px; right: 190px; }
 #b { top: 159px; right: 140px; }
-#a { top: 183px; right: 165px; }
+#a { top: 205px; right: 141px; }
