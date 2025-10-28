@@ -63,10 +63,13 @@ function addKeyToLegend(keyId, keyElement) {
 function removeKeyFromLegend(keyId) {
     const mapping = mappedKeys.get(keyId);
     if (!mapping) return;
-    // Reset overlay to transparent
-    mapping.keyElement.style.backgroundColor = 'rgba(255, 0, 0, 0.0)';
-    mapping.keyElement.style.color = ''; // Reset if needed
-    mapping.keyElement.style.boxShadow = ''; // Reset if needed
+
+    // Reset styles by clearing the inline properties
+    mapping.keyElement.style.backgroundColor = ''; // Crucial: Set to empty string
+    mapping.keyElement.style.color = '';
+    mapping.keyElement.style.boxShadow = ''; // Also reset any other inline styles applied
+
+    // Remove from legend and map
     mapping.legendItem.remove();
     mappedKeys.delete(keyId);
 }
